@@ -8,10 +8,11 @@ import {
   List,
   Card,
 } from "@ui-kitten/components";
+import WebView from "react-native-webview";
 import { Video, ResizeMode } from "expo-av";
 import storage from "@react-native-firebase/storage";
 import { ArchiveItem } from "../components/archive-item";
-import WebView from "react-native-webview";
+import DownloadFile from "../components/downloadFile";
 
 const Archive = ({ route, navigation }: any) => {
   const [screen, setScreen] = useState(0);
@@ -121,7 +122,10 @@ const Archive = ({ route, navigation }: any) => {
         message={item}
         type={screen}
         onPress={() => {
-          navigation.navigate("Archive", item);
+          console.log(item.name.substr(-3));
+          item.name.substr(-3) == "pdf"
+            ? DownloadFile(item)
+            : console.log("audio");
         }}
       />
     );
@@ -134,7 +138,7 @@ const Archive = ({ route, navigation }: any) => {
       {screen == 0 ? (
         <ScrollView>
           <Card style={{ margin: 7 }}>
-            {/* <Video
+            <Video
               // ref={video}
               style={{
                 height: 300,
@@ -149,8 +153,8 @@ const Archive = ({ route, navigation }: any) => {
               resizeMode={ResizeMode.CONTAIN}
               isLooping
               // onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-            /> */}
-            <WebView
+            />
+            {/* <WebView
               style={{
                 height: 300,
                 width: "100%",
@@ -161,14 +165,11 @@ const Archive = ({ route, navigation }: any) => {
               source={{
                 uri: "https://www.youtube.com/watch?v=VThA4QOLF_I",
               }}
-            />
+            /> */}
           </Card>
           <Card style={{ margin: 7 }}>
             <Text>{autor.descricao}</Text>
           </Card>
-          {/* <Card style={{ margin: 7 }}>
-            <Text>{autor.descricao}</Text>
-          </Card> */}
         </ScrollView>
       ) : screen == 1 ? (
         <List

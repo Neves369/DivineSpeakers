@@ -6,8 +6,6 @@ import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 export const ArchiveItem = (props: any) => {
   const { message, onPress, type, ...listItemProps } = props;
 
-  console.log(message);
-
   const renderMessageDate = (style: ViewStyle): React.ReactElement => (
     <View style={styles.dateContainer}>
       <Text style={styles.dateText} appearance="hint" category="c1">
