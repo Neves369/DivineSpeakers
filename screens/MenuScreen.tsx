@@ -5,31 +5,57 @@ import {
   Layout,
   StyleService,
   useStyleSheet,
+  Spinner,
 } from "@ui-kitten/components";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { MessageItem } from "../components/message-item";
 import firestore from "@react-native-firebase/firestore";
+import { TouchableOpacity, View } from "react-native";
 
 const Menu = () => {
   const navigation = useNavigation();
   const [show, setShow] = useState(false);
-  const [data, setData] = useState<any>([]);
+  const [offset, setOffset] = useState(null);
   const styles = useStyleSheet(themedStyles);
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [isListEnd, setisListEnd] = useState(false);
   const [searchQuery, setSearchQuery] = React.useState<string>();
 
-  async function getData() {
-    const data: any = await firestore()
-      .collection("autores")
-      .orderBy("nome")
-      .get();
-    setData(data._docs);
-    setShow(true);
+  function getData() {
+    console.log(offset);
+
+    if (!loading && !isListEnd) {
+      console.log("getData");
+      setLoading(true);
+      firestore()
+        .collection("autores")
+        .orderBy("nome")
+        .startAfter(offset)
+        .limit(10)
+        .get()
+        .then((query: any) => {
+          if (query.docs.length > 0) {
+            setOffset(query.docs[query.docs.length - 1]);
+            setData([...data, ...query.docs]);
+            setLoading(false);
+          } else {
+            setisListEnd(true);
+            setLoading(false);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
   }
 
-  useEffect(() => {
-    getData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+    }, [])
+  );
 
   const renderItem = useCallback(({ item, index }: any) => {
     return (
@@ -37,7 +63,9 @@ const Menu = () => {
         style={styles.item}
         message={item}
         onPress={() => {
-          navigation.navigate("Archive", item);
+          //@ts-ignore
+          console.log(data);
+          // navigation.navigate("Archive", item);
         }}
       />
     );
@@ -53,18 +81,33 @@ const Menu = () => {
     </Layout>
   );
 
-  if (show) {
-    return (
-      <List
-        style={styles.list}
-        data={data}
-        renderItem={renderItem}
-        ListHeaderComponent={renderHeader}
-      />
-    );
-  } else {
-    return <></>;
-  }
+  const renderFooter = (): React.ReactElement => (
+    <View
+      style={{
+        width: "100%",
+        height: 25,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      {loading ? <Spinner /> : <></>}
+    </View>
+  );
+
+  return (
+    <List
+      style={styles.list}
+      data={data}
+      renderItem={renderItem}
+      ListHeaderComponent={renderHeader}
+      ListFooterComponent={renderFooter}
+      onEndReachedThreshold={0.5}
+      keyExtractor={(item) => `${item.id}`}
+      onEndReached={() => {
+        getData();
+      }}
+    />
+  );
 };
 
 export default Menu;

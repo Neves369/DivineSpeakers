@@ -138,23 +138,7 @@ const Archive = ({ route, navigation }: any) => {
       {screen == 0 ? (
         <ScrollView>
           <Card style={{ margin: 7 }}>
-            <Video
-              // ref={video}
-              style={{
-                height: 300,
-                width: "100%",
-                backgroundColor: "black",
-                borderRadius: 8,
-              }}
-              source={{
-                uri: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
-              }}
-              useNativeControls
-              resizeMode={ResizeMode.CONTAIN}
-              isLooping
-              // onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-            />
-            {/* <WebView
+            <WebView
               style={{
                 height: 300,
                 width: "100%",
@@ -162,10 +146,12 @@ const Archive = ({ route, navigation }: any) => {
                 borderRadius: 8,
               }}
               javaScriptEnabled={true}
+              scrollEnabled={false}
+              allowsFullscreenVideo={true}
               source={{
-                uri: "https://www.youtube.com/watch?v=VThA4QOLF_I",
+                uri: `https://www.youtube.com/embed/${autor.video}?&autoplay=0&mute=0&showinfo=0&controls=1&fullscreen=1`,
               }}
-            /> */}
+            />
           </Card>
           <Card style={{ margin: 7 }}>
             <Text>{autor.descricao}</Text>
