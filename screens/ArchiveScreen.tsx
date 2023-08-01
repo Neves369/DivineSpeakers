@@ -1,5 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { View, StyleSheet, ScrollView, Image } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Image,
+  ToastAndroid,
+} from "react-native";
 import {
   Avatar,
   Layout,
@@ -9,10 +15,9 @@ import {
   Card,
 } from "@ui-kitten/components";
 import WebView from "react-native-webview";
-import { Video, ResizeMode } from "expo-av";
 import storage from "@react-native-firebase/storage";
-import { ArchiveItem } from "../components/archive-item";
 import DownloadFile from "../components/downloadFile";
+import { ArchiveItem } from "../components/archive-item";
 
 const Archive = ({ route, navigation }: any) => {
   const [screen, setScreen] = useState(0);
@@ -44,7 +49,8 @@ const Archive = ({ route, navigation }: any) => {
       );
       setArchives(docs);
     } catch (error) {
-      console.error("Error listing documents:", error);
+      ToastAndroid.show(`${error}`, ToastAndroid.SHORT);
+      console.error("Error listing documents: ", error);
     }
   }
 
@@ -122,7 +128,6 @@ const Archive = ({ route, navigation }: any) => {
         message={item}
         type={screen}
         onPress={() => {
-          console.log(item.name.substr(-3));
           item.name.substr(-3) == "pdf"
             ? DownloadFile(item)
             : console.log("audio");
@@ -138,7 +143,7 @@ const Archive = ({ route, navigation }: any) => {
       {screen == 0 ? (
         <ScrollView>
           <Card style={{ margin: 7 }}>
-            <WebView
+            {/* <WebView
               style={{
                 height: 300,
                 width: "100%",
@@ -151,7 +156,7 @@ const Archive = ({ route, navigation }: any) => {
               source={{
                 uri: `https://www.youtube.com/embed/${autor.video}?&autoplay=0&mute=0&showinfo=0&controls=1&fullscreen=1`,
               }}
-            />
+            /> */}
           </Card>
           <Card style={{ margin: 7 }}>
             <Text>{autor.descricao}</Text>

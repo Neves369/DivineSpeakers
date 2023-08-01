@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Text } from "@ui-kitten/components";
+import { Spinner, Text } from "@ui-kitten/components";
 import { Entypo } from "@expo/vector-icons";
 import {
   View,
@@ -11,7 +11,7 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from "react-native";
-const { width, height } = Dimensions.get("screen");
+const { width } = Dimensions.get("screen");
 import { useNavigation } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
 
@@ -34,23 +34,32 @@ const Home = () => {
   );
 
   async function getData() {
-    const data: any = await firestore()
+    firestore()
       .collection("autores")
       .where("principais", "==", true)
-      .get();
-    setData(data._docs);
-    setShow(true);
+      .get()
+      .then((query: any) => {
+        if (query.docs.length > 0) {
+          setData(query.docs);
+          setShow(true);
+        } else {
+          setShow(true);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
-  const scrollToIndex = () => {
-    let ind = index + 1;
-    if (ind >= data.length) {
-      ind = 0;
-    }
-    flatlistRef.current.scrollToIndex({ animated: true, index: ind });
+  // const scrollToIndex = () => {
+  //   let ind = index + 1;
+  //   if (ind >= data.length) {
+  //     ind = 0;
+  //   }
+  //   flatlistRef.current.scrollToIndex({ animated: true, index: ind });
 
-    return setTimer(10);
-  };
+  //   return setTimer(10);
+  // };
 
   function renderCarousel(data: any) {
     const renderItem = useCallback(({ item, index }: any) => {
@@ -59,6 +68,7 @@ const Home = () => {
           key={`item-${index}`}
           style={{ justifyContent: "flex-end" }}
           onPress={() => {
+            //@ts-ignore
             navigation.navigate("Archive", item);
           }}
         >
@@ -109,7 +119,7 @@ const Home = () => {
           </View>
           <FlatList
             data={data}
-            ref={flatlistRef}
+            // ref={flatlistRef}
             onScroll={onScroll}
             keyExtractor={(_, index) => index.toString()}
             renderItem={renderItem}
@@ -157,7 +167,17 @@ const Home = () => {
         </>
       );
     } else {
-      return <></>;
+      return (
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "black",
+          }}
+        >
+          <Spinner size="giant" />
+        </View>
+      );
     }
   }
 
@@ -200,6 +220,7 @@ const Home = () => {
           size={30}
           color="white"
           onPress={() => {
+            //@ts-ignore
             navigation.navigate("Menu");
           }}
         />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
   List,
   Input,
@@ -7,15 +7,14 @@ import {
   useStyleSheet,
   Spinner,
 } from "@ui-kitten/components";
+import { ToastAndroid, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { MessageItem } from "../components/message-item";
 import firestore from "@react-native-firebase/firestore";
-import { TouchableOpacity, View } from "react-native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 const Menu = () => {
   const navigation = useNavigation();
-  const [show, setShow] = useState(false);
   const [offset, setOffset] = useState(null);
   const styles = useStyleSheet(themedStyles);
   const [data, setData] = useState<any[]>([]);
@@ -24,8 +23,6 @@ const Menu = () => {
   const [searchQuery, setSearchQuery] = React.useState<string>();
 
   function getData() {
-    console.log(offset);
-
     if (!loading && !isListEnd) {
       console.log("getData");
       setLoading(true);
@@ -46,6 +43,10 @@ const Menu = () => {
           }
         })
         .catch((error) => {
+          ToastAndroid.show(
+            "Não foi possível buscar dados!",
+            ToastAndroid.SHORT
+          );
           console.error(error);
         });
     }
@@ -53,6 +54,10 @@ const Menu = () => {
 
   useFocusEffect(
     useCallback(() => {
+      setData([]);
+      setOffset(null);
+      setLoading(false);
+      setisListEnd(false);
       getData();
     }, [])
   );
@@ -64,8 +69,8 @@ const Menu = () => {
         message={item}
         onPress={() => {
           //@ts-ignore
-          console.log(data);
-          // navigation.navigate("Archive", item);
+          // console.log(data);
+          navigation.navigate("Archive", item);
         }}
       />
     );

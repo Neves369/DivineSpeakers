@@ -1,13 +1,15 @@
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ToastAndroid } from "react-native";
 
 let Permission: any;
-let OfflinePdf: any;
 
 //salva o arquivo na memória
 const saveAndroidFile = async (fileUri: any, fileName: any) => {
   try {
+    await AsyncStorage.setItem("OfflinePDF" + fileName, fileUri as string);
+
     const fileString = await FileSystem.readAsStringAsync(fileUri, {
       encoding: FileSystem.EncodingType.Base64,
     });
@@ -38,12 +40,37 @@ const saveAndroidFile = async (fileUri: any, fileName: any) => {
             encoding: FileSystem.EncodingType.Base64,
           });
         })
-        .catch((e: string) => {});
-    } catch (e) {}
-  } catch (err) {}
+        .catch((e: string) => {
+          ToastAndroid.show(`${e}`, ToastAndroid.SHORT);
+        });
+    } catch (e) {
+      ToastAndroid.show(`${e}`, ToastAndroid.SHORT);
+    }
+  } catch (err) {
+    ToastAndroid.show(`${err}`, ToastAndroid.SHORT);
+  }
 };
 
 //faz o download do arquivo
+const verifyFile = async (item: any) => {
+  let ref = await AsyncStorage.getItem("OfflinePDF" + item.name);
+  if (ref) {
+    await FileSystem.getInfoAsync(ref).then((response) => {
+      const { exists, uri } = response;
+      if (exists) {
+        Sharing.shareAsync(uri, {
+          dialogTitle: "Abrir com...",
+          mimeType: "application/pdf",
+        });
+      } else {
+        downloadFile(item);
+      }
+    });
+  } else {
+    downloadFile(item);
+  }
+};
+
 const downloadFile = async (item: any) => {
   const downloadResumable = FileSystem.createDownloadResumable(
     item.downloadURL,
@@ -56,17 +83,18 @@ const downloadFile = async (item: any) => {
     const downloadResult = await downloadResumable.downloadAsync();
 
     if (downloadResult?.status != 200) {
-      return console.log("erro");
+      return console.error("error");
     }
 
     await saveAndroidFile(downloadResult?.uri, item.name);
+
     Sharing.shareAsync(downloadResult?.uri, {
       dialogTitle: "Abrir com...",
       mimeType: "application/pdf",
     });
   } catch (error) {
-    console.error("Erro ao baixar o arquivo:", error);
+    ToastAndroid.show(`${error}`, ToastAndroid.SHORT);
   }
 };
 
-export default downloadFile;
+export default verifyFile;
