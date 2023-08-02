@@ -24,7 +24,6 @@ const Menu = () => {
 
   function getData() {
     if (!loading && !isListEnd) {
-      console.log("getData");
       setLoading(true);
       firestore()
         .collection("autores")
@@ -69,7 +68,6 @@ const Menu = () => {
         message={item}
         onPress={() => {
           //@ts-ignore
-          // console.log(data);
           navigation.navigate("Archive", item);
         }}
       />
@@ -95,7 +93,7 @@ const Menu = () => {
         alignItems: "center",
       }}
     >
-      {loading ? <Spinner /> : <></>}
+      {loading ? <Spinner status="warning" /> : <></>}
     </View>
   );
 

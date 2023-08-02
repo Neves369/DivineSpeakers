@@ -1,10 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   View,
   StyleSheet,
   ScrollView,
   Image,
   ToastAndroid,
+  Modal,
+  Platform,
 } from "react-native";
 import {
   Avatar,
@@ -13,46 +15,75 @@ import {
   Button,
   List,
   Card,
+  Spinner,
 } from "@ui-kitten/components";
+import { Audio } from "expo-av";
 import WebView from "react-native-webview";
+import { AntDesign } from "@expo/vector-icons";
+import Slider from "@react-native-community/slider";
 import storage from "@react-native-firebase/storage";
 import DownloadFile from "../components/downloadFile";
 import { ArchiveItem } from "../components/archive-item";
 
 const Archive = ({ route, navigation }: any) => {
   const [screen, setScreen] = useState(0);
+  const sound = useRef(new Audio.Sound());
   const [audios, setAudios] = useState<any>([]);
+  const [visible, setVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [archives, setArchives] = useState<any>([]);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [loadedAudio, setLoadedAudio] = useState(false);
   const [autor, setAutor] = useState(route.params._data);
+  const [selectedAudio, setSelectedAudio] = useState<any>();
 
   useEffect(() => {
-    listDocumentsInFolder(`/${autor.ref}`, "pdf");
+    if (screen == 1 || screen == 2) {
+      listDocumentsInFolder(`/${autor.ref}`);
+    }
   }, [screen]);
 
-  async function listDocumentsInFolder(folderPath: string, ends: string) {
+  useEffect(() => {
+    if (loadedAudio) {
+      setVisible(true);
+    }
+  }, [loadedAudio]);
+
+  async function listDocumentsInFolder(folderPath: string) {
+    setIsLoading(true);
     try {
       const reference = storage().ref(folderPath);
       const listResult = await reference.listAll();
 
-      const filter = listResult.items.filter((item) => {
-        return item.name.toLowerCase().endsWith(`.${ends}`);
-      });
+      let filterDocs = await separateDocs(listResult, "pdf");
+      let filterAudios = await separateDocs(listResult, "mp3");
 
-      const docs = await Promise.all(
-        filter.map(async (item) => {
-          return {
-            name: item.name,
-            fullPath: item.fullPath,
-            downloadURL: await item.getDownloadURL(),
-          };
-        })
-      );
-      setArchives(docs);
+      setArchives(filterDocs);
+      setAudios(filterAudios);
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       ToastAndroid.show(`${error}`, ToastAndroid.SHORT);
       console.error("Error listing documents: ", error);
     }
   }
+
+  const separateDocs = async (array: any, ends: string) => {
+    const filter = array.items.filter((item: any) => {
+      return item.name.toLowerCase().endsWith(`.${ends}`);
+    });
+
+    const docs = await Promise.all(
+      filter.map(async (item: any) => {
+        return {
+          name: item.name,
+          fullPath: item.fullPath,
+          downloadURL: await item.getDownloadURL(),
+        };
+      })
+    );
+    return docs;
+  };
 
   const renderHeader = () => {
     return (
@@ -121,16 +152,77 @@ const Archive = ({ route, navigation }: any) => {
     );
   };
 
+  const loadAudio = async (item: any) => {
+    setSelectedAudio(item);
+    const checkLoading = await sound.current.getStatusAsync();
+    if (checkLoading.isLoaded === false) {
+      try {
+        const result = await sound.current.loadAsync({
+          uri: item.downloadURL,
+        });
+
+        if (result.isLoaded === false) {
+          console.error("Error in Loading Audio");
+        } else {
+          setLoadedAudio(true);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  const PlayAudio = async () => {
+    try {
+      const result = await sound.current.getStatusAsync();
+      if (result.isLoaded) {
+        if (result.isPlaying === false) {
+          sound.current.playAsync();
+          setIsPlaying(true);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const PauseAudio = async () => {
+    try {
+      const result = await sound.current.getStatusAsync();
+      if (result.isLoaded) {
+        if (result.isPlaying === true) {
+          sound.current.pauseAsync();
+          setIsPlaying(false);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const CloseAudio = async () => {
+    try {
+      const result = await sound.current.getStatusAsync();
+      if (result.isLoaded) {
+        sound.current.unloadAsync();
+        setSelectedAudio(null);
+        setLoadedAudio(false);
+        setIsPlaying(false);
+        setVisible(false);
+      }
+    } catch (error) {
+      setVisible(false);
+      console.error(error);
+    }
+  };
+
   const renderItem = useCallback(({ item, index }: any) => {
     return (
       <ArchiveItem
         style={styles.item}
         message={item}
-        type={screen}
         onPress={() => {
-          item.name.substr(-3) == "pdf"
-            ? DownloadFile(item)
-            : console.log("audio");
+          item.name.substr(-3) == "pdf" ? DownloadFile(item) : loadAudio(item);
         }}
       />
     );
@@ -142,21 +234,20 @@ const Archive = ({ route, navigation }: any) => {
 
       {screen == 0 ? (
         <ScrollView>
-          <Card style={{ margin: 7 }}>
-            {/* <WebView
+          <Card style={{ margin: 7 }} disabled>
+            <WebView
               style={{
                 height: 300,
                 width: "100%",
                 backgroundColor: "black",
-                borderRadius: 8,
               }}
               javaScriptEnabled={true}
               scrollEnabled={false}
-              allowsFullscreenVideo={true}
+              allowsFullscreenVideo={false}
               source={{
                 uri: `https://www.youtube.com/embed/${autor.video}?&autoplay=0&mute=0&showinfo=0&controls=1&fullscreen=1`,
               }}
-            /> */}
+            />
           </Card>
           <Card style={{ margin: 7 }}>
             <Text>{autor.descricao}</Text>
@@ -167,15 +258,106 @@ const Archive = ({ route, navigation }: any) => {
           style={styles.list}
           data={archives}
           renderItem={renderItem}
-          ListEmptyComponent={<></>}
+          ListEmptyComponent={
+            <View
+              style={{
+                width: "100%",
+                height: 25,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {isLoading ? (
+                <Spinner status="warning" />
+              ) : (
+                <Text style={{ textAlign: "center", color: "grey" }}>
+                  Nenhum arquivo de texto para esse autor
+                </Text>
+              )}
+            </View>
+          }
         />
       ) : screen == 2 ? (
-        <List
-          style={styles.list}
-          data={audios}
-          renderItem={renderItem}
-          ListEmptyComponent={<></>}
-        />
+        <>
+          <List
+            style={styles.list}
+            data={audios}
+            renderItem={renderItem}
+            ListEmptyComponent={
+              <View
+                style={{
+                  width: "100%",
+                  height: 25,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {isLoading ? (
+                  <Spinner status="warning" />
+                ) : (
+                  <Text style={{ textAlign: "center", color: "grey" }}>
+                    Nenhum arquivo de áudio para esse autor
+                  </Text>
+                )}
+              </View>
+            }
+          />
+          <Modal visible={visible} transparent>
+            <Card
+              style={{ position: "absolute", bottom: 0, width: "100%" }}
+              disabled={true}
+            >
+              <AntDesign
+                onPress={() => {
+                  CloseAudio();
+                }}
+                style={{ position: "absolute", right: 0 }}
+                name="closecircle"
+                size={24}
+                color="black"
+              />
+              <Text>{selectedAudio?.name}</Text>
+              <View
+                style={{ marginTop: 20, width: "100%", flexDirection: "row" }}
+              >
+                {isPlaying ? (
+                  <AntDesign
+                    onPress={() => {
+                      PauseAudio();
+                    }}
+                    style={{ flex: 1 }}
+                    name="pausecircle"
+                    size={24}
+                    color="black"
+                  />
+                ) : (
+                  <AntDesign
+                    onPress={() => {
+                      PlayAudio();
+                    }}
+                    style={{ flex: 1 }}
+                    name="play"
+                    size={24}
+                    color="black"
+                  />
+                )}
+                <Slider
+                  style={{ flex: 10 }}
+                  minimumValue={0}
+                  maximumValue={1}
+                  minimumTrackTintColor="#000000"
+                  maximumTrackTintColor="#000000"
+                  thumbTintColor="#000000"
+                />
+                <View style={{ flex: 2 }}>
+                  <Text style={{ fontSize: 9, marginTop: 5 }}>
+                    {"00:00/00:00"}
+                  </Text>
+                </View>
+              </View>
+            </Card>
+          </Modal>
+        </>
       ) : (
         <></>
       )}

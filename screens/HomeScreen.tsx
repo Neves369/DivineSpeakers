@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Spinner, Text } from "@ui-kitten/components";
-import { Entypo } from "@expo/vector-icons";
+import { Entypo, Ionicons } from "@expo/vector-icons";
 import {
   View,
   Animated,
@@ -172,10 +172,9 @@ const Home = () => {
           style={{
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: "black",
           }}
         >
-          <Spinner size="giant" />
+          <Spinner size="giant" status="warning" />
         </View>
       );
     }
@@ -206,12 +205,12 @@ const Home = () => {
       {renderCarousel(data)}
       <View
         style={{
-          // backgroundColor: "red",
+          flexDirection: "row",
           height: 50,
           width: "100%",
           position: "absolute",
           top: 50,
-          justifyContent: "center",
+          alignItems: "center",
           paddingLeft: 12,
         }}
       >
@@ -219,10 +218,17 @@ const Home = () => {
           name="menu"
           size={30}
           color="white"
+          style={{ position: "absolute", left: 8 }}
           onPress={() => {
             //@ts-ignore
             navigation.navigate("Menu");
           }}
+        />
+        <Ionicons
+          style={{ position: "absolute", right: 8 }}
+          name="settings-sharp"
+          size={30}
+          color="white"
         />
       </View>
     </View>

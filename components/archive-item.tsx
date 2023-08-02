@@ -4,7 +4,7 @@ import { StyleSheet, View, ViewStyle } from "react-native";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 
 export const ArchiveItem = (props: any) => {
-  const { message, onPress, type, ...listItemProps } = props;
+  const { message, onPress, ...listItemProps } = props;
 
   const renderMessageDate = (style: ViewStyle): React.ReactElement => (
     <View style={styles.dateContainer}>
@@ -15,8 +15,8 @@ export const ArchiveItem = (props: any) => {
   );
 
   const renderProfileAvatar = (): React.ReactElement =>
-    type == 0 ? (
-      <FontAwesome name="file-pdf-o" size={24} color="gray" />
+    message.name.toLowerCase().endsWith(`pdf`) ? (
+      <FontAwesome name="file-pdf-o" size={20} color="gray" />
     ) : (
       <MaterialIcons name="multitrack-audio" size={24} color="gray" />
     );
