@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -6,7 +6,6 @@ import {
   Image,
   ToastAndroid,
   Modal,
-  Platform,
 } from "react-native";
 import {
   Avatar,
@@ -17,37 +16,26 @@ import {
   Card,
   Spinner,
 } from "@ui-kitten/components";
-import { Audio } from "expo-av";
 import WebView from "react-native-webview";
-import { AntDesign } from "@expo/vector-icons";
-import Slider from "@react-native-community/slider";
 import storage from "@react-native-firebase/storage";
 import DownloadFile from "../components/downloadFile";
 import { ArchiveItem } from "../components/archive-item";
+import ReproduceAudio from "../components/reproduceAudio";
+import AuthContext from "../context/auth";
 
 const Archive = ({ route, navigation }: any) => {
   const [screen, setScreen] = useState(0);
-  const sound = useRef(new Audio.Sound());
   const [audios, setAudios] = useState<any>([]);
-  const [visible, setVisible] = useState(false);
+  const [autor, setAutor] = useState(route.params);
   const [isLoading, setIsLoading] = useState(false);
   const [archives, setArchives] = useState<any>([]);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [loadedAudio, setLoadedAudio] = useState(false);
-  const [autor, setAutor] = useState(route.params._data);
-  const [selectedAudio, setSelectedAudio] = useState<any>();
+  const { changeSelectAudio }: any = useContext(AuthContext);
 
   useEffect(() => {
     if (screen == 1 || screen == 2) {
       listDocumentsInFolder(`/${autor.ref}`);
     }
   }, [screen]);
-
-  useEffect(() => {
-    if (loadedAudio) {
-      setVisible(true);
-    }
-  }, [loadedAudio]);
 
   async function listDocumentsInFolder(folderPath: string) {
     setIsLoading(true);
@@ -152,77 +140,15 @@ const Archive = ({ route, navigation }: any) => {
     );
   };
 
-  const loadAudio = async (item: any) => {
-    setSelectedAudio(item);
-    const checkLoading = await sound.current.getStatusAsync();
-    if (checkLoading.isLoaded === false) {
-      try {
-        const result = await sound.current.loadAsync({
-          uri: item.downloadURL,
-        });
-
-        if (result.isLoaded === false) {
-          console.error("Error in Loading Audio");
-        } else {
-          setLoadedAudio(true);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
-
-  const PlayAudio = async () => {
-    try {
-      const result = await sound.current.getStatusAsync();
-      if (result.isLoaded) {
-        if (result.isPlaying === false) {
-          sound.current.playAsync();
-          setIsPlaying(true);
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const PauseAudio = async () => {
-    try {
-      const result = await sound.current.getStatusAsync();
-      if (result.isLoaded) {
-        if (result.isPlaying === true) {
-          sound.current.pauseAsync();
-          setIsPlaying(false);
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const CloseAudio = async () => {
-    try {
-      const result = await sound.current.getStatusAsync();
-      if (result.isLoaded) {
-        sound.current.unloadAsync();
-        setSelectedAudio(null);
-        setLoadedAudio(false);
-        setIsPlaying(false);
-        setVisible(false);
-      }
-    } catch (error) {
-      setVisible(false);
-      console.error(error);
-    }
-  };
-
   const renderItem = useCallback(({ item, index }: any) => {
     return (
       <ArchiveItem
         style={styles.item}
         message={item}
         onPress={() => {
-          item.name.substr(-3) == "pdf" ? DownloadFile(item) : loadAudio(item);
+          item.name.substr(-3) == "pdf"
+            ? DownloadFile(item)
+            : changeSelectAudio(item);
         }}
       />
     );
@@ -278,86 +204,29 @@ const Archive = ({ route, navigation }: any) => {
           }
         />
       ) : screen == 2 ? (
-        <>
-          <List
-            style={styles.list}
-            data={audios}
-            renderItem={renderItem}
-            ListEmptyComponent={
-              <View
-                style={{
-                  width: "100%",
-                  height: 25,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                {isLoading ? (
-                  <Spinner status="warning" />
-                ) : (
-                  <Text style={{ textAlign: "center", color: "grey" }}>
-                    Nenhum arquivo de áudio para esse autor
-                  </Text>
-                )}
-              </View>
-            }
-          />
-          <Modal visible={visible} transparent>
-            <Card
-              style={{ position: "absolute", bottom: 0, width: "100%" }}
-              disabled={true}
+        <List
+          style={styles.list}
+          data={audios}
+          renderItem={renderItem}
+          ListEmptyComponent={
+            <View
+              style={{
+                width: "100%",
+                height: 25,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
             >
-              <AntDesign
-                onPress={() => {
-                  CloseAudio();
-                }}
-                style={{ position: "absolute", right: 0 }}
-                name="closecircle"
-                size={24}
-                color="black"
-              />
-              <Text>{selectedAudio?.name}</Text>
-              <View
-                style={{ marginTop: 20, width: "100%", flexDirection: "row" }}
-              >
-                {isPlaying ? (
-                  <AntDesign
-                    onPress={() => {
-                      PauseAudio();
-                    }}
-                    style={{ flex: 1 }}
-                    name="pausecircle"
-                    size={24}
-                    color="black"
-                  />
-                ) : (
-                  <AntDesign
-                    onPress={() => {
-                      PlayAudio();
-                    }}
-                    style={{ flex: 1 }}
-                    name="play"
-                    size={24}
-                    color="black"
-                  />
-                )}
-                <Slider
-                  style={{ flex: 10 }}
-                  minimumValue={0}
-                  maximumValue={1}
-                  minimumTrackTintColor="#000000"
-                  maximumTrackTintColor="#000000"
-                  thumbTintColor="#000000"
-                />
-                <View style={{ flex: 2 }}>
-                  <Text style={{ fontSize: 9, marginTop: 5 }}>
-                    {"00:00/00:00"}
-                  </Text>
-                </View>
-              </View>
-            </Card>
-          </Modal>
-        </>
+              {isLoading ? (
+                <Spinner status="warning" />
+              ) : (
+                <Text style={{ textAlign: "center", color: "grey" }}>
+                  Nenhum arquivo de áudio para esse autor
+                </Text>
+              )}
+            </View>
+          }
+        />
       ) : (
         <></>
       )}
@@ -386,7 +255,6 @@ const styles = StyleSheet.create({
   },
   profileAvatar: {
     marginHorizontal: 8,
-    elevation: 10,
   },
   profileDetailsContainer: {
     flex: 1,

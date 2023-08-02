@@ -1,15 +1,12 @@
-import React, { useContext } from "react";
-// import AuthContext from "../contexts/auth";
+import React from "react";
 import AppRoutes from "./app.routes";
-// import AuthRoutes from "./auth.routes";
+import ReproduceAudio from "../components/reproduceAudio";
 
-const Routes: React.FC = () => {
-  // const { signed, error, hideMessage, showError }: any =
-  //   useContext(AuthContext);
-
+const Routes: React.FC = (children: any) => {
   return (
     <>
       <AppRoutes />
+      <ReproduceAudio />
     </>
   );
 };

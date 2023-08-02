@@ -69,7 +69,7 @@ const Home = () => {
           style={{ justifyContent: "flex-end" }}
           onPress={() => {
             //@ts-ignore
-            navigation.navigate("Archive", item);
+            navigation.navigate("Archive", item._data);
           }}
         >
           <View

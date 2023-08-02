@@ -68,7 +68,7 @@ const Menu = () => {
         message={item}
         onPress={() => {
           //@ts-ignore
-          navigation.navigate("Archive", item);
+          navigation.navigate("Archive", item._data);
         }}
       />
     );
@@ -79,7 +79,8 @@ const Menu = () => {
       <Input
         placeholder="Search"
         value={searchQuery}
-        accessoryRight={<Ionicons name="search" size={24} color="black" />}
+        //@ts-nocheck
+        accessoryRight={<Ionicons name="search" size={24} />}
       />
     </Layout>
   );
