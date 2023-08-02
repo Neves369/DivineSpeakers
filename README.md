@@ -25,7 +25,7 @@
   - [Node.js](https://nodejs.org/en/)
   - [Expo](https://expo.io/)  
   - [React Native](https://reactnative.dev/)
-  - [Fire Base](https://firebase.google.com/)
+  - [FireBase](https://firebase.google.com/)
   
 
 
