@@ -83,7 +83,10 @@ const downloadFile = async (item: any) => {
     const downloadResult = await downloadResumable.downloadAsync();
 
     if (downloadResult?.status != 200) {
-      return console.error("error");
+      return ToastAndroid.show(
+        "Não foi possível fazer o download!",
+        ToastAndroid.SHORT
+      );
     }
 
     await saveAndroidFile(downloadResult?.uri, item.name);

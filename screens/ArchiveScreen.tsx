@@ -5,7 +5,6 @@ import {
   ScrollView,
   Image,
   ToastAndroid,
-  Modal,
 } from "react-native";
 import {
   Avatar,
@@ -20,7 +19,6 @@ import WebView from "react-native-webview";
 import storage from "@react-native-firebase/storage";
 import DownloadFile from "../components/downloadFile";
 import { ArchiveItem } from "../components/archive-item";
-import ReproduceAudio from "../components/reproduceAudio";
 import AuthContext from "../context/auth";
 
 const Archive = ({ route, navigation }: any) => {
@@ -49,10 +47,9 @@ const Archive = ({ route, navigation }: any) => {
       setArchives(filterDocs);
       setAudios(filterAudios);
       setIsLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       setIsLoading(false);
-      ToastAndroid.show(`${error}`, ToastAndroid.SHORT);
-      console.error("Error listing documents: ", error);
+      ToastAndroid.show(`${error.message}`, ToastAndroid.SHORT);
     }
   }
 

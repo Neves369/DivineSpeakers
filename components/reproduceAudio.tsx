@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { AppState, View } from "react-native";
+import { AppState, ToastAndroid, View } from "react-native";
 import { Text, Card } from "@ui-kitten/components";
 import { Audio } from "expo-av";
 import { AntDesign } from "@expo/vector-icons";
@@ -15,36 +15,36 @@ const ReproduceAudio = () => {
   const [selectedAudio, setSelectedAudio] = useState<any>();
   const [visibleMusicCard, setVisibleMusicCard] = useState(false);
   const { audio, changeSelectAudio }: any = useContext(AuthContext);
-  const appState = useRef(AppState.currentState);
+  //   const appState = useRef(AppState.currentState);
 
-  const handleAppStateChange = async (nextAppState: any) => {
-    console.log(nextAppState);
+  //   const handleAppStateChange = async (nextAppState: any) => {
+  //     console.log(nextAppState);
 
-    // if (
-    //   appState.current.match(/inactive|background/) &&
-    //   nextAppState === "active"
-    // ) {
-    //   const elapsed = await getElapsedTime();
+  //     // if (
+  //     //   appState.current.match(/inactive|background/) &&
+  //     //   nextAppState === "active"
+  //     // ) {
+  //     //   const elapsed = await getElapsedTime();
 
-    //   if (elapsed < timerCount) {
-    //     setTimer(timerCount - elapsed);
-    //   } else {
-    //     setTimer(0);
-    //   }
-    //   setElapsed(elapsed);
-    // }
-    // appState.current = nextAppState;
-  };
+  //     //   if (elapsed < timerCount) {
+  //     //     setTimer(timerCount - elapsed);
+  //     //   } else {
+  //     //     setTimer(0);
+  //     //   }
+  //     //   setElapsed(elapsed);
+  //     // }
+  //     // appState.current = nextAppState;
+  //   };
 
-  useEffect(() => {
-    const subscription = AppState.addEventListener(
-      "change",
-      handleAppStateChange
-    );
-    return () => {
-      subscription.remove();
-    };
-  }, []);
+  //   useEffect(() => {
+  //     const subscription = AppState.addEventListener(
+  //       "change",
+  //       handleAppStateChange
+  //     );
+  //     return () => {
+  //       subscription.remove();
+  //     };
+  //   }, []);
 
   useEffect(() => {
     if (audio != null) {
@@ -91,7 +91,10 @@ const ReproduceAudio = () => {
           //   Audio.setAudioModeAsync({ staysActiveInBackground: true });
         }
       } catch (error) {
-        console.error(error);
+        ToastAndroid.show(
+          "Não foi possível carregar áudio!",
+          ToastAndroid.SHORT
+        );
       }
     }
   };
@@ -106,7 +109,10 @@ const ReproduceAudio = () => {
         }
       }
     } catch (error) {
-      console.error(error);
+      ToastAndroid.show(
+        "Não foi possível reproduzir áudio!",
+        ToastAndroid.SHORT
+      );
     }
   };
 
@@ -120,7 +126,7 @@ const ReproduceAudio = () => {
         }
       }
     } catch (error) {
-      console.error(error);
+      ToastAndroid.show("Não foi pausar áudio!", ToastAndroid.SHORT);
     }
   };
 
@@ -139,12 +145,11 @@ const ReproduceAudio = () => {
       }
     } catch (error) {
       setVisibleMusicCard(false);
-      console.error(error);
+      ToastAndroid.show("Não foi possível encerrar áudio!", ToastAndroid.SHORT);
     }
   };
 
   const handleJumpToMillis = async (millis: any) => {
-    console.log(parseInt(millis) * 1000);
     if (sound.current !== null && millis != 0) {
       await sound.current.setPositionAsync(parseInt(millis) * 1000);
     }

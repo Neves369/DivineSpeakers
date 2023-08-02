@@ -23,7 +23,15 @@
         "backgroundColor": "#000000"
       },
       "googleServicesFile": "./google-services.json",
-      "package": "com.neves369.divinespeakers"
+      "package": "com.neves369.divinespeakers",
+      "versionCode": 1,
+      "permissions": [ 
+        "READ_INTERNAL_STORAGE",
+        "WRITE_INTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "POST_NOTIFICATIONS"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -3,12 +3,12 @@ import {
   List,
   Input,
   Layout,
+  Spinner,
   StyleService,
   useStyleSheet,
-  Spinner,
 } from "@ui-kitten/components";
-import { ToastAndroid, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { ToastAndroid, View } from "react-native";
 import { MessageItem } from "../components/message-item";
 import firestore from "@react-native-firebase/firestore";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
@@ -20,7 +20,7 @@ const Menu = () => {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [isListEnd, setisListEnd] = useState(false);
-  const [searchQuery, setSearchQuery] = React.useState<string>();
+  const [searchQuery, setSearchQuery] = React.useState<string>("Tozer");
 
   function getData() {
     if (!loading && !isListEnd) {
@@ -46,7 +46,31 @@ const Menu = () => {
             "Não foi possível buscar dados!",
             ToastAndroid.SHORT
           );
-          console.error(error);
+        });
+    }
+  }
+
+  function getFiltredData() {
+    if (!loading) {
+      setLoading(true);
+      firestore()
+        .collection("autores")
+        .where("name", "in", searchQuery)
+        .orderBy("nome")
+        .get()
+        .then((query: any) => {
+          if (query.docs.length > 0) {
+            setData(query.docs);
+            setLoading(false);
+          } else {
+            setLoading(false);
+          }
+        })
+        .catch((error) => {
+          ToastAndroid.show(
+            "Não foi possível buscar dados!",
+            ToastAndroid.SHORT
+          );
         });
     }
   }
@@ -80,7 +104,15 @@ const Menu = () => {
         placeholder="Search"
         value={searchQuery}
         //@ts-nocheck
-        accessoryRight={<Ionicons name="search" size={24} />}
+        accessoryRight={
+          <Ionicons
+            name="search"
+            size={24}
+            onPress={() => {
+              getFiltredData();
+            }}
+          />
+        }
       />
     </Layout>
   );
@@ -103,7 +135,7 @@ const Menu = () => {
       style={styles.list}
       data={data}
       renderItem={renderItem}
-      ListHeaderComponent={renderHeader}
+      // ListHeaderComponent={renderHeader}
       ListFooterComponent={renderFooter}
       onEndReachedThreshold={0.5}
       keyExtractor={(item) => `${item.id}`}

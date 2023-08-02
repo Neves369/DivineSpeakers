@@ -5,6 +5,7 @@ import Routes from "./routes";
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { AuthProvider } from "./context/auth";
+import { ModalPermission } from "./components/permissions-modal";
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
         <StatusBar translucent />
         <AuthProvider>
           <Routes />
+          <ModalPermission />
         </AuthProvider>
       </ApplicationProvider>
     </NavigationContainer>

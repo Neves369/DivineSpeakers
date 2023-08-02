@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Spinner, Text } from "@ui-kitten/components";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import {
@@ -10,18 +10,17 @@ import {
   TouchableOpacity,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  ToastAndroid,
 } from "react-native";
 const { width } = Dimensions.get("screen");
 import { useNavigation } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
 
 const Home = () => {
-  const flatlistRef = useRef();
   const navigation = useNavigation();
   const [index, setIndex] = useState(0);
   const [show, setShow] = useState(false);
   const [data, setData] = useState<any>([]);
-  const [timerCount, setTimer] = useState<number>(10);
 
   const onScroll = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -47,19 +46,9 @@ const Home = () => {
         }
       })
       .catch((error) => {
-        console.error(error);
+        ToastAndroid.show("Não foi possível buscar dados!", ToastAndroid.SHORT);
       });
   }
-
-  // const scrollToIndex = () => {
-  //   let ind = index + 1;
-  //   if (ind >= data.length) {
-  //     ind = 0;
-  //   }
-  //   flatlistRef.current.scrollToIndex({ animated: true, index: ind });
-
-  //   return setTimer(10);
-  // };
 
   function renderCarousel(data: any) {
     const renderItem = useCallback(({ item, index }: any) => {
@@ -119,7 +108,6 @@ const Home = () => {
           </View>
           <FlatList
             data={data}
-            // ref={flatlistRef}
             onScroll={onScroll}
             keyExtractor={(_, index) => index.toString()}
             renderItem={renderItem}
@@ -183,22 +171,6 @@ const Home = () => {
   useEffect(() => {
     getData();
   }, []);
-
-  // Atualiza o temporizador
-  // useEffect(() => {
-  //   let interval = setInterval(() => {
-  //     if (timerCount == 0) {
-  //       scrollToIndex();
-  //     }
-  //     if (timerCount > 0) {
-  //       setTimer((lastTimerCount) => {
-  //         lastTimerCount <= 1 && clearInterval(interval);
-  //         return lastTimerCount - 1;
-  //       });
-  //     }
-  //   }, 1000);
-  //   return () => clearInterval(interval);
-  // }, [timerCount]);
 
   return (
     <View style={styles.container}>
