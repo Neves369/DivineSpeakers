@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { Spinner, Text } from "@ui-kitten/components";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import {
   View,
-  Animated,
+  Image,
   FlatList,
   StyleSheet,
   Dimensions,
@@ -15,6 +15,11 @@ import {
 const { width } = Dimensions.get("screen");
 import { useNavigation } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
+import {
+  clearCache,
+  retrieveDataFromCache,
+  storeDataInCache,
+} from "../components/cache";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -33,24 +38,36 @@ const Home = () => {
   );
 
   async function getData() {
-    firestore()
-      .collection("autores")
-      .where("principais", "==", true)
-      .get()
-      .then((query: any) => {
-        if (query.docs.length > 0) {
-          setData(query.docs);
-          setShow(true);
-        } else {
-          setShow(true);
-        }
-      })
-      .catch((error) => {
-        ToastAndroid.show("Não foi possível buscar dados!", ToastAndroid.SHORT);
-      });
+    // await clearCache();
+    let carossel: any = await retrieveDataFromCache("caroussel");
+    if (carossel) {
+      setData(carossel);
+      setShow(true);
+    } else {
+      firestore()
+        .collection("autores")
+        .where("principais", "==", true)
+        .get()
+        .then((query: any) => {
+          if (query.docs.length > 0) {
+            let filter = query.docs.map((item: any) => item._data);
+            setData(filter);
+            storeDataInCache(filter, "caroussel");
+            setShow(true);
+          } else {
+            setShow(true);
+          }
+        })
+        .catch((error) => {
+          ToastAndroid.show(
+            "Não foi possível buscar dados!",
+            ToastAndroid.SHORT
+          );
+        });
+    }
   }
 
-  function renderCarousel(data: any) {
+  const renderCarousel = (data: any) => {
     const renderItem = useCallback(({ item, index }: any) => {
       return (
         <TouchableOpacity
@@ -58,7 +75,7 @@ const Home = () => {
           style={{ justifyContent: "flex-end" }}
           onPress={() => {
             //@ts-ignore
-            navigation.navigate("Archive", item._data);
+            navigation.navigate("Archive", item);
           }}
         >
           <View
@@ -73,17 +90,17 @@ const Home = () => {
             }}
           >
             <Text category="h1" status="control">
-              {item._data.nome}
+              {item.nome}
             </Text>
             <Text category="h6" status="control">
-              {item._data.titulo}
+              {item.titulo}
             </Text>
             <Text
               style={{ marginTop: 25, textAlign: "justify" }}
               category="s2"
               status="control"
             >
-              {item._data.descricao}
+              {item.descricao}
             </Text>
           </View>
         </TouchableOpacity>
@@ -94,17 +111,18 @@ const Home = () => {
       return (
         <>
           <View style={[StyleSheet.absoluteFillObject]}>
-            <Animated.Image
+            {/* <Image
               key={`image-${index}`}
               source={{
-                uri: data[index]._data.foto,
+                uri: data[index].foto,
+                cache: "only-if-cached",
               }}
               style={[
                 StyleSheet.absoluteFillObject,
                 { opacity: 1, backgroundColor: "black" },
               ]}
               blurRadius={0}
-            />
+            /> */}
           </View>
           <FlatList
             data={data}
@@ -166,10 +184,12 @@ const Home = () => {
         </View>
       );
     }
-  }
+  };
 
   useEffect(() => {
-    getData();
+    if (data.length == 0) {
+      getData();
+    }
   }, []);
 
   return (
@@ -207,7 +227,7 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default memo(Home);
 
 const styles = StyleSheet.create({
   container: {

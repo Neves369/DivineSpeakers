@@ -24,6 +24,7 @@ export const ModalPermission = () => {
 
   const handleSetPermissions = async () => {
     await AsyncStorage.setItem("setTerms", checked.toString());
+    setVisible(false);
   };
 
   return (

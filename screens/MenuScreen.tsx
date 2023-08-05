@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect, memo } from "react";
 import {
   List,
   Input,
@@ -11,7 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { ToastAndroid, View } from "react-native";
 import { MessageItem } from "../components/message-item";
 import firestore from "@react-native-firebase/firestore";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 const Menu = () => {
   const navigation = useNavigation();
@@ -75,15 +75,15 @@ const Menu = () => {
     }
   }
 
-  useFocusEffect(
-    useCallback(() => {
+  useEffect(() => {
+    if (data.length == 0) {
       setData([]);
       setOffset(null);
       setLoading(false);
       setisListEnd(false);
       getData();
-    }, [])
-  );
+    }
+  }, []);
 
   const renderItem = useCallback(({ item, index }: any) => {
     return (
@@ -146,7 +146,7 @@ const Menu = () => {
   );
 };
 
-export default Menu;
+export default memo(Menu);
 
 const themedStyles = StyleService.create({
   list: {

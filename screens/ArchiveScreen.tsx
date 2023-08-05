@@ -31,7 +31,9 @@ const Archive = ({ route, navigation }: any) => {
 
   useEffect(() => {
     if (screen == 1 || screen == 2) {
-      listDocumentsInFolder(`/${autor.ref}`);
+      if (archives.length == 0 && audios.length == 0) {
+        listDocumentsInFolder(`/${autor.ref}`);
+      }
     }
   }, [screen]);
 
@@ -122,7 +124,7 @@ const Archive = ({ route, navigation }: any) => {
         </Layout>
         <Image
           source={{
-            uri: autor.capa,
+            uri: autor.cap,
           }}
           style={{
             backgroundColor: "black",
@@ -158,7 +160,7 @@ const Archive = ({ route, navigation }: any) => {
       {screen == 0 ? (
         <ScrollView>
           <Card style={{ margin: 7 }} disabled>
-            <WebView
+            {/* <WebView
               style={{
                 height: 300,
                 width: "100%",
@@ -170,7 +172,7 @@ const Archive = ({ route, navigation }: any) => {
               source={{
                 uri: `https://www.youtube.com/embed/${autor.video}?&autoplay=0&mute=0&showinfo=0&controls=1&fullscreen=1`,
               }}
-            />
+            /> */}
           </Card>
           <Card style={{ margin: 7 }}>
             <Text>{autor.descricao}</Text>
