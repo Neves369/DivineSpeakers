@@ -3,7 +3,6 @@ import { Spinner, Text } from "@ui-kitten/components";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import {
   View,
-  Image,
   FlatList,
   StyleSheet,
   Dimensions,
@@ -12,6 +11,7 @@ import {
   NativeSyntheticEvent,
   ToastAndroid,
 } from "react-native";
+import { Image } from "expo-image";
 const { width } = Dimensions.get("screen");
 import { useNavigation } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
@@ -37,35 +37,28 @@ const Home = () => {
     []
   );
 
-  async function getData() {
+  const getData = async () => {
     // await clearCache();
-    let carossel: any = await retrieveDataFromCache("caroussel");
-    if (carossel) {
-      setData(carossel);
+    // let carossel: any = await retrieveDataFromCache("caroussel");
+    if (false) {
+      // setData(carossel);
       setShow(true);
     } else {
       firestore()
         .collection("autores")
         .where("principais", "==", true)
-        .get()
-        .then((query: any) => {
+        .onSnapshot((query: any) => {
           if (query.docs.length > 0) {
             let filter = query.docs.map((item: any) => item._data);
             setData(filter);
-            storeDataInCache(filter, "caroussel");
+            // storeDataInCache(filter, "caroussel");
             setShow(true);
           } else {
             setShow(true);
           }
-        })
-        .catch((error) => {
-          ToastAndroid.show(
-            "Não foi possível buscar dados!",
-            ToastAndroid.SHORT
-          );
         });
     }
-  }
+  };
 
   const renderCarousel = (data: any) => {
     const renderItem = useCallback(({ item, index }: any) => {
@@ -111,18 +104,18 @@ const Home = () => {
       return (
         <>
           <View style={[StyleSheet.absoluteFillObject]}>
-            {/* <Image
+            <Image
               key={`image-${index}`}
+              cachePolicy={"disk"}
               source={{
                 uri: data[index].foto,
-                cache: "only-if-cached",
               }}
               style={[
                 StyleSheet.absoluteFillObject,
                 { opacity: 1, backgroundColor: "black" },
               ]}
               blurRadius={0}
-            /> */}
+            />
           </View>
           <FlatList
             data={data}

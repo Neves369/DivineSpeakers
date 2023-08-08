@@ -15,36 +15,6 @@ const ReproduceAudio = () => {
   const [selectedAudio, setSelectedAudio] = useState<any>();
   const [visibleMusicCard, setVisibleMusicCard] = useState(false);
   const { audio, changeSelectAudio }: any = useContext(AuthContext);
-  //   const appState = useRef(AppState.currentState);
-
-  //   const handleAppStateChange = async (nextAppState: any) => {
-  //     console.log(nextAppState);
-
-  //     // if (
-  //     //   appState.current.match(/inactive|background/) &&
-  //     //   nextAppState === "active"
-  //     // ) {
-  //     //   const elapsed = await getElapsedTime();
-
-  //     //   if (elapsed < timerCount) {
-  //     //     setTimer(timerCount - elapsed);
-  //     //   } else {
-  //     //     setTimer(0);
-  //     //   }
-  //     //   setElapsed(elapsed);
-  //     // }
-  //     // appState.current = nextAppState;
-  //   };
-
-  //   useEffect(() => {
-  //     const subscription = AppState.addEventListener(
-  //       "change",
-  //       handleAppStateChange
-  //     );
-  //     return () => {
-  //       subscription.remove();
-  //     };
-  //   }, []);
 
   useEffect(() => {
     if (audio != null) {
@@ -157,10 +127,7 @@ const ReproduceAudio = () => {
 
   if (visibleMusicCard) {
     return (
-      <Card
-        style={{ position: "absolute", bottom: 0, width: "100%" }}
-        disabled={true}
-      >
+      <Card style={{ bottom: 0, width: "100%" }} disabled={true}>
         <AntDesign
           onPress={() => {
             CloseAudio();

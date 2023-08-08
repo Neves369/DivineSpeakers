@@ -1,6 +1,7 @@
 import React from "react";
+import { Image } from "expo-image";
+import { ListItem, Text } from "@ui-kitten/components";
 import { StyleSheet, View, ViewStyle } from "react-native";
-import { Avatar, ListItem, Text } from "@ui-kitten/components";
 
 export const MessageItem = (props: any) => {
   const { message, onPress, ...listItemProps } = props;
@@ -8,16 +9,17 @@ export const MessageItem = (props: any) => {
   const renderMessageDate = (style: ViewStyle): React.ReactElement => (
     <View style={styles.dateContainer}>
       <Text style={styles.dateText} appearance="hint" category="c1">
-        {message._data.nascimento}
+        {message.nascimento}
       </Text>
     </View>
   );
 
   const renderProfileAvatar = (): React.ReactElement => (
-    <Avatar
+    <Image
+      cachePolicy={"disk"}
       style={styles.avatar}
-      resizeMode="contain"
-      source={{ uri: message._data.foto }}
+      contentFit="fill"
+      source={{ uri: message.foto }}
     />
   );
 
@@ -25,8 +27,8 @@ export const MessageItem = (props: any) => {
     <ListItem
       {...listItemProps}
       onPress={onPress}
-      title={message._data.nome}
-      description={message._data.titulo}
+      title={message.nome}
+      description={message.titulo}
       accessoryLeft={renderProfileAvatar}
       accessoryRight={renderMessageDate}
     />
@@ -38,6 +40,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     marginRight: 10,
+    borderRadius: 20,
   },
   dateContainer: {
     flexDirection: "row",

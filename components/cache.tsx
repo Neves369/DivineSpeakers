@@ -2,7 +2,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const storeDataInCache = async (data: any, cacheKey: string) => {
   try {
-    console.log("teste, ", data);
     await AsyncStorage.setItem(cacheKey, JSON.stringify(data));
   } catch (error) {
     console.error("Error storing data in cache:", error);

@@ -1,13 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
+import { View, StyleSheet, ScrollView, ToastAndroid } from "react-native";
 import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Image,
-  ToastAndroid,
-} from "react-native";
-import {
-  Avatar,
   Layout,
   Text,
   Button,
@@ -15,6 +8,7 @@ import {
   Card,
   Spinner,
 } from "@ui-kitten/components";
+import { Image } from "expo-image";
 import WebView from "react-native-webview";
 import storage from "@react-native-firebase/storage";
 import DownloadFile from "../components/downloadFile";
@@ -76,10 +70,10 @@ const Archive = ({ route, navigation }: any) => {
     return (
       <>
         <Layout style={styles.header} level="1">
-          <Avatar
+          <Image
+            cachePolicy={"disk"}
             style={styles.profileAvatar}
-            size="giant"
-            resizeMode="contain"
+            contentFit="fill"
             source={{ uri: autor.foto }}
           />
           <View style={styles.profileDetailsContainer}>
@@ -122,10 +116,20 @@ const Archive = ({ route, navigation }: any) => {
             Áudios
           </Button>
         </Layout>
-        <Image
+        {/* <Image
           source={{
             uri: autor.cap,
           }}
+          style={{
+            backgroundColor: "black",
+            height: 250,
+            width: "100%",
+            position: "absolute",
+            top: -20,
+            zIndex: -999,
+          }}
+        /> */}
+        <View
           style={{
             backgroundColor: "black",
             height: 250,
@@ -160,7 +164,7 @@ const Archive = ({ route, navigation }: any) => {
       {screen == 0 ? (
         <ScrollView>
           <Card style={{ margin: 7 }} disabled>
-            {/* <WebView
+            <WebView
               style={{
                 height: 300,
                 width: "100%",
@@ -172,7 +176,7 @@ const Archive = ({ route, navigation }: any) => {
               source={{
                 uri: `https://www.youtube.com/embed/${autor.video}?&autoplay=0&mute=0&showinfo=0&controls=1&fullscreen=1`,
               }}
-            /> */}
+            />
           </Card>
           <Card style={{ margin: 7 }}>
             <Text>{autor.descricao}</Text>
@@ -254,6 +258,10 @@ const styles = StyleSheet.create({
   },
   profileAvatar: {
     marginHorizontal: 8,
+    width: 40,
+    height: 40,
+
+    borderRadius: 20,
   },
   profileDetailsContainer: {
     flex: 1,

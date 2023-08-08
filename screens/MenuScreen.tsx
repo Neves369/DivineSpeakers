@@ -12,6 +12,7 @@ import { ToastAndroid, View } from "react-native";
 import { MessageItem } from "../components/message-item";
 import firestore from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
+import { retrieveDataFromCache, storeDataInCache } from "../components/cache";
 
 const Menu = () => {
   const navigation = useNavigation();
@@ -20,9 +21,9 @@ const Menu = () => {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [isListEnd, setisListEnd] = useState(false);
-  const [searchQuery, setSearchQuery] = React.useState<string>("Tozer");
+  const [searchQuery, setSearchQuery] = useState<string>("Tozer");
 
-  function getData() {
+  const getData = async () => {
     if (!loading && !isListEnd) {
       setLoading(true);
       firestore()
@@ -33,8 +34,9 @@ const Menu = () => {
         .get()
         .then((query: any) => {
           if (query.docs.length > 0) {
+            let filter = query.docs.map((item: any) => item._data);
             setOffset(query.docs[query.docs.length - 1]);
-            setData([...data, ...query.docs]);
+            setData([...data, ...filter]);
             setLoading(false);
           } else {
             setisListEnd(true);
@@ -48,7 +50,7 @@ const Menu = () => {
           );
         });
     }
-  }
+  };
 
   function getFiltredData() {
     if (!loading) {
@@ -92,7 +94,7 @@ const Menu = () => {
         message={item}
         onPress={() => {
           //@ts-ignore
-          navigation.navigate("Archive", item._data);
+          navigation.navigate("Archive", item);
         }}
       />
     );
@@ -138,7 +140,7 @@ const Menu = () => {
       // ListHeaderComponent={renderHeader}
       ListFooterComponent={renderFooter}
       onEndReachedThreshold={0.5}
-      keyExtractor={(item) => `${item.id}`}
+      keyExtractor={(item) => `${item.ref}`}
       onEndReached={() => {
         getData();
       }}
