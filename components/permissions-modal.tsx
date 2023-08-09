@@ -1,9 +1,9 @@
 import data from "../data.json";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, ScrollView, View } from "react-native";
+import { StyleSheet, ScrollView, View, Modal } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Button, Card, CheckBox, Modal, Text } from "@ui-kitten/components";
+import { Button, Card, CheckBox, Text } from "@ui-kitten/components";
 
 export const ModalPermission = () => {
   const [checked, setChecked] = useState(false);
@@ -28,9 +28,12 @@ export const ModalPermission = () => {
   };
 
   return (
-    <Modal visible={visible} backdropStyle={styles.backdrop}>
-      <StatusBar backgroundColor="black" />
-      <Card disabled={true} style={{ width: "100%", height: 600 }}>
+    <Modal visible={visible} style={styles.backdrop}>
+      <StatusBar backgroundColor="white" />
+      <Card
+        disabled={true}
+        style={{ width: "100%", height: "100%", backgroundColor: "white" }}
+      >
         <Text style={{ textAlign: "justify", fontWeight: "bold" }}>
           DivineSpeakers - Termos e Condições de Uso
         </Text>
@@ -67,6 +70,10 @@ const styles = StyleSheet.create({
     minHeight: 192,
   },
   backdrop: {
-    backgroundColor: "rgba(0, 0, 0, 1)",
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+    textAlign: "center",
   },
 });

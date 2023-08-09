@@ -1,6 +1,10 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
-import { Spinner, Text } from "@ui-kitten/components";
-import { Entypo, Ionicons } from "@expo/vector-icons";
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useState,
+  useContext,
+} from "react";
 import {
   View,
   FlatList,
@@ -9,23 +13,21 @@ import {
   TouchableOpacity,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  ToastAndroid,
 } from "react-native";
 import { Image } from "expo-image";
+import AuthContext from "../context/auth";
 const { width } = Dimensions.get("screen");
+import { Spinner, Text } from "@ui-kitten/components";
+import { Entypo, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
-import {
-  clearCache,
-  retrieveDataFromCache,
-  storeDataInCache,
-} from "../components/cache";
 
 const Home = () => {
   const navigation = useNavigation();
   const [index, setIndex] = useState(0);
   const [show, setShow] = useState(false);
   const [data, setData] = useState<any>([]);
+  const { theme }: any = useContext(AuthContext);
 
   const onScroll = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -38,26 +40,20 @@ const Home = () => {
   );
 
   const getData = async () => {
-    // await clearCache();
-    // let carossel: any = await retrieveDataFromCache("caroussel");
-    if (false) {
-      // setData(carossel);
-      setShow(true);
-    } else {
-      firestore()
-        .collection("autores")
-        .where("principais", "==", true)
-        .onSnapshot((query: any) => {
-          if (query.docs.length > 0) {
-            let filter = query.docs.map((item: any) => item._data);
-            setData(filter);
-            // storeDataInCache(filter, "caroussel");
-            setShow(true);
-          } else {
-            setShow(true);
-          }
-        });
-    }
+    firestore()
+      .collection("autores")
+      .where("atributos", "array-contains", theme.ref)
+      .onSnapshot((query: any) => {
+        if (query.docs.length > 0) {
+          let filter: [] = query.docs.map((item: any) => item._data);
+          filter.unshift(theme);
+          setData(filter);
+
+          setShow(true);
+        } else {
+          setShow(true);
+        }
+      });
   };
 
   const renderCarousel = (data: any) => {
@@ -65,11 +61,14 @@ const Home = () => {
       return (
         <TouchableOpacity
           key={`item-${index}`}
-          style={{ justifyContent: "flex-end" }}
+          style={{
+            justifyContent: "flex-end",
+          }}
           onPress={() => {
             //@ts-ignore
             navigation.navigate("Archive", item);
           }}
+          disabled={index == 0 ? true : false}
         >
           <View
             style={{
@@ -85,7 +84,7 @@ const Home = () => {
             <Text category="h1" status="control">
               {item.nome}
             </Text>
-            <Text category="h6" status="control">
+            <Text category="h6" status="control" style={{ color: "gray" }}>
               {item.titulo}
             </Text>
             <Text
@@ -120,6 +119,7 @@ const Home = () => {
           <FlatList
             data={data}
             onScroll={onScroll}
+            style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
             keyExtractor={(_, index) => index.toString()}
             renderItem={renderItem}
             horizontal
@@ -133,11 +133,12 @@ const Home = () => {
               justifyContent: "space-between",
               paddingHorizontal: 25,
               alignItems: "center",
+              backgroundColor: "rgba(0,0,0,0.5)",
             }}
           >
             <View
               style={{
-                backgroundColor: "rgba(200, 200, 200, 0.05)",
+                backgroundColor: "transparent",
                 height: 5,
                 width: "100%",
                 flexDirection: "row",
@@ -155,8 +156,8 @@ const Home = () => {
                       borderRadius: 15,
                       backgroundColor:
                         indx == index
-                          ? "rgba(255, 255, 255, 1)"
-                          : "rgba(255, 255, 255, 0.5)",
+                          ? "rgba(255, 255, 255, 0.3)"
+                          : "rgba(255, 255, 255, 0.1)",
                     }}
                   />
                 );
@@ -180,10 +181,10 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (data.length == 0) {
+    if (data.length == 0 && theme) {
       getData();
     }
-  }, []);
+  }, [theme]);
 
   return (
     <View style={styles.container}>

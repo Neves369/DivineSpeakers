@@ -1,5 +1,5 @@
-import React from "react";
 import { Image } from "expo-image";
+import React, { useCallback } from "react";
 import { ListItem, Text } from "@ui-kitten/components";
 import { StyleSheet, View, ViewStyle } from "react-native";
 
@@ -14,13 +14,16 @@ export const MessageItem = (props: any) => {
     </View>
   );
 
-  const renderProfileAvatar = (): React.ReactElement => (
-    <Image
-      cachePolicy={"disk"}
-      style={styles.avatar}
-      contentFit="fill"
-      source={{ uri: message.foto }}
-    />
+  const renderProfileAvatar = useCallback(
+    (): React.ReactElement => (
+      <Image
+        cachePolicy={"disk"}
+        style={styles.avatar}
+        contentFit="fill"
+        source={{ uri: message.foto }}
+      />
+    ),
+    []
   );
 
   return (

@@ -1,5 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView, ToastAndroid } from "react-native";
+import tempImage from "../assets/background.png";
 import {
   Layout,
   Text,
@@ -7,6 +8,7 @@ import {
   List,
   Card,
   Spinner,
+  Divider,
 } from "@ui-kitten/components";
 import { Image } from "expo-image";
 import WebView from "react-native-webview";
@@ -116,20 +118,8 @@ const Archive = ({ route, navigation }: any) => {
             Áudios
           </Button>
         </Layout>
-        {/* <Image
-          source={{
-            uri: autor.cap,
-          }}
-          style={{
-            backgroundColor: "black",
-            height: 250,
-            width: "100%",
-            position: "absolute",
-            top: -20,
-            zIndex: -999,
-          }}
-        /> */}
-        <View
+        <Image
+          source={tempImage}
           style={{
             backgroundColor: "black",
             height: 250,
@@ -139,6 +129,16 @@ const Archive = ({ route, navigation }: any) => {
             zIndex: -999,
           }}
         />
+        {/* <View
+          style={{
+            backgroundColor: "black",
+            height: 250,
+            width: "100%",
+            position: "absolute",
+            top: -20,
+            zIndex: -999,
+          }}
+        /> */}
       </>
     );
   };
@@ -150,8 +150,8 @@ const Archive = ({ route, navigation }: any) => {
         message={item}
         onPress={() => {
           item.name.substr(-3) == "pdf"
-            ? DownloadFile(item)
-            : changeSelectAudio(item);
+            ? DownloadFile(item, "pdf")
+            : DownloadFile(item, "mp3");
         }}
       />
     );
@@ -187,6 +187,7 @@ const Archive = ({ route, navigation }: any) => {
           style={styles.list}
           data={archives}
           renderItem={renderItem}
+          ItemSeparatorComponent={Divider}
           ListEmptyComponent={
             <View
               style={{

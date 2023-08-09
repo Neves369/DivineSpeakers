@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { AppState, ToastAndroid, View } from "react-native";
 import { Text, Card } from "@ui-kitten/components";
-import { Audio } from "expo-av";
-import { AntDesign } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
+import * as Notifications from "expo-notifications";
+import { AntDesign } from "@expo/vector-icons";
 import AuthContext from "../context/auth";
+import { Audio } from "expo-av";
 
 const ReproduceAudio = () => {
   const sound = useRef(new Audio.Sound());
@@ -18,6 +19,13 @@ const ReproduceAudio = () => {
 
   useEffect(() => {
     if (audio != null) {
+      (async () => {
+        const result = await sound.current.getStatusAsync();
+        if (result.isLoaded) {
+          await sound.current.stopAsync();
+          await sound.current.unloadAsync();
+        }
+      })();
       loadAudio(audio);
     }
   }, [audio]);
@@ -25,6 +33,7 @@ const ReproduceAudio = () => {
   useEffect(() => {
     if (loadedAudio) {
       setVisibleMusicCard(true);
+      // handleNotification();
     }
   }, [loadedAudio]);
 
@@ -104,6 +113,7 @@ const ReproduceAudio = () => {
     try {
       const result = await sound.current.getStatusAsync();
       if (result.isLoaded) {
+        await sound.current.stopAsync();
         sound.current.unloadAsync();
         setSelectedAudio(null);
         setLoadedAudio(false);
@@ -123,6 +133,16 @@ const ReproduceAudio = () => {
     if (sound.current !== null && millis != 0) {
       await sound.current.setPositionAsync(parseInt(millis) * 1000);
     }
+  };
+
+  const handleNotification = async () => {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Minha Notificação",
+        body: "Esta é uma notificação simples do Expo.",
+      },
+      trigger: null, // Pode definir um gatilho aqui, como um tempo específico
+    });
   };
 
   if (visibleMusicCard) {

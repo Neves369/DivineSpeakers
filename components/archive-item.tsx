@@ -25,7 +25,7 @@ export const ArchiveItem = (props: any) => {
     <ListItem
       {...listItemProps}
       onPress={onPress}
-      title={message.name}
+      title={message.name.substr(0, message.name.length - 4)}
       accessoryLeft={renderProfileAvatar}
       // accessoryRight={renderMessageDate}
     />

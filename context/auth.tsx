@@ -1,9 +1,11 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
+import firestore from "@react-native-firebase/firestore";
 
 interface AuthContextData {
   changeSelectAudio(audio: any): void;
   changeVerifyUpdates(up: boolean): void;
   audio: any;
+  theme: any;
   verifyUpdates: boolean;
 }
 
@@ -11,6 +13,7 @@ const AuthContext = createContext<AuthContextData | undefined>(undefined);
 
 export const AuthProvider = ({ children }: any) => {
   const [audio, setAudio] = useState();
+  const [theme, setTheme] = useState<any>();
   const [verifyUpdates, setverifyUpdates] = useState(true);
 
   function changeSelectAudio(audio: any) {
@@ -21,6 +24,20 @@ export const AuthProvider = ({ children }: any) => {
     setverifyUpdates(up);
   }
 
+  const getData = async () => {
+    firestore()
+      .collection("carroussell")
+      .onSnapshot((query) => {
+        setTheme(query.docs[0]._data);
+      });
+  };
+
+  useEffect(() => {
+    if (!theme) {
+      getData();
+    }
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -28,6 +45,7 @@ export const AuthProvider = ({ children }: any) => {
         changeVerifyUpdates,
         verifyUpdates,
         audio,
+        theme,
       }}
     >
       {children}

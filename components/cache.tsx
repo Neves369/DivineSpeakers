@@ -21,9 +21,7 @@ export const retrieveDataFromCache = async (cacheKey: string) => {
 export const clearCache = async () => {
   try {
     const keys = ["caroussel"];
-    await AsyncStorage.multiRemove(keys).then(() => {
-      console.log("clear");
-    });
+    await AsyncStorage.multiRemove(keys).then(() => {});
   } catch (error) {
     console.error("Error clearing cache:", error);
   }

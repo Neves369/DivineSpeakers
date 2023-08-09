@@ -1,4 +1,3 @@
-import React, { useState, useCallback, useEffect, memo } from "react";
 import {
   List,
   Input,
@@ -12,7 +11,7 @@ import { ToastAndroid, View } from "react-native";
 import { MessageItem } from "../components/message-item";
 import firestore from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
-import { retrieveDataFromCache, storeDataInCache } from "../components/cache";
+import React, { useState, useCallback, useEffect, memo } from "react";
 
 const Menu = () => {
   const navigation = useNavigation();
