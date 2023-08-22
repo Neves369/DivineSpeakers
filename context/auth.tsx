@@ -9,6 +9,10 @@ interface AuthContextData {
   verifyUpdates: boolean;
 }
 
+// const interstitial = InterstitialAd.createForAdRequest(TestIds.INTERSTITIAL, {
+//   requestNonPersonalizedAdsOnly: true,
+// });
+
 const AuthContext = createContext<AuthContextData | undefined>(undefined);
 
 export const AuthProvider = ({ children }: any) => {
@@ -27,7 +31,8 @@ export const AuthProvider = ({ children }: any) => {
   const getData = async () => {
     firestore()
       .collection("carroussell")
-      .onSnapshot((query) => {
+      .where("status", "==", true)
+      .onSnapshot((query: any) => {
         setTheme(query.docs[0]._data);
       });
   };

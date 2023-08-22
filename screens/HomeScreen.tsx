@@ -211,10 +211,14 @@ const Home = () => {
           }}
         />
         <Ionicons
-          style={{ position: "absolute", right: 8 }}
           name="settings-sharp"
           size={30}
           color="white"
+          style={{ position: "absolute", right: 8 }}
+          onPress={() => {
+            //@ts-ignore
+            navigation.navigate("Settings");
+          }}
         />
       </View>
     </View>

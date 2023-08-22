@@ -10,6 +10,13 @@ import {
   Spinner,
   Divider,
 } from "@ui-kitten/components";
+import {
+  BannerAd,
+  BannerAdSize,
+  TestIds,
+  InterstitialAd,
+  AdEventType,
+} from "react-native-google-mobile-ads";
 import { Image } from "expo-image";
 import WebView from "react-native-webview";
 import storage from "@react-native-firebase/storage";
@@ -17,20 +24,33 @@ import DownloadFile from "../components/downloadFile";
 import { ArchiveItem } from "../components/archive-item";
 import AuthContext from "../context/auth";
 
+const interstitial = InterstitialAd.createForAdRequest(
+  "ca-app-pub-9187411594153289/4560480625",
+  {
+    requestNonPersonalizedAdsOnly: true,
+  }
+);
+
 const Archive = ({ route, navigation }: any) => {
   const [screen, setScreen] = useState(0);
   const [audios, setAudios] = useState<any>([]);
   const [autor, setAutor] = useState(route.params);
   const [isLoading, setIsLoading] = useState(false);
   const [archives, setArchives] = useState<any>([]);
-  const { changeSelectAudio }: any = useContext(AuthContext);
+  // const { changeSelectAudio }: any = useContext(AuthContext);
+  const [interstitialLoaded, setInterstitialLoaded] = useState(false);
 
   useEffect(() => {
+    const unsubscribeInterstitialEvents = loadInterstitial();
     if (screen == 1 || screen == 2) {
       if (archives.length == 0 && audios.length == 0) {
         listDocumentsInFolder(`/${autor.ref}`);
       }
     }
+
+    return () => {
+      unsubscribeInterstitialEvents();
+    };
   }, [screen]);
 
   async function listDocumentsInFolder(folderPath: string) {
@@ -143,15 +163,41 @@ const Archive = ({ route, navigation }: any) => {
     );
   };
 
+  const loadInterstitial = () => {
+    const unsubscribeLoaded = interstitial.addAdEventListener(
+      AdEventType.LOADED,
+      () => {
+        setInterstitialLoaded(true);
+      }
+    );
+
+    const unsubscribeClosed = interstitial.addAdEventListener(
+      AdEventType.CLOSED,
+      () => {
+        interstitial.load();
+      }
+    );
+
+    interstitial.load();
+
+    return () => {
+      unsubscribeClosed();
+      unsubscribeLoaded();
+    };
+  };
+
   const renderItem = useCallback(({ item, index }: any) => {
     return (
       <ArchiveItem
         style={styles.item}
         message={item}
         onPress={() => {
-          item.name.substr(-3) == "pdf"
-            ? DownloadFile(item, "pdf")
-            : DownloadFile(item, "mp3");
+          interstitial.show();
+          setTimeout(() => {
+            item.name.substr(-3) == "pdf"
+              ? DownloadFile(item, "pdf")
+              : DownloadFile(item, "mp3");
+          }, 3000);
         }}
       />
     );
@@ -179,7 +225,7 @@ const Archive = ({ route, navigation }: any) => {
             />
           </Card>
           <Card style={{ margin: 7 }}>
-            <Text>{autor.descricao}</Text>
+            <Text style={{ textAlign: "justify" }}>{autor.descricao}</Text>
           </Card>
         </ScrollView>
       ) : screen == 1 ? (

@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ArchiveScreen from "../screens/ArchiveScreen";
 import HomeScreen from "../screens/HomeScreen";
 import MenuScreen from "../screens/MenuScreen";
+import Settings from "../screens/ConfigScreen";
 import React from "react";
 
 const AppStack = createNativeStackNavigator();
@@ -15,6 +16,7 @@ const AppRoutes: React.FC = () => {
         component={HomeScreen}
       />
       <AppStack.Screen name="Menu" component={MenuScreen} />
+      <AppStack.Screen name="Settings" component={Settings} />
       <AppStack.Screen
         name="Archive"
         component={ArchiveScreen}
