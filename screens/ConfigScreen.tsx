@@ -15,6 +15,7 @@ import {
   ScrollView,
   ToastAndroid,
   TouchableOpacity,
+  Linking,
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
@@ -77,7 +78,10 @@ const Settings = () => {
           />
         </TouchableOpacity>
         <Divider />
-        <TouchableOpacity style={styles.option}>
+        <TouchableOpacity
+          onPress={() => Linking.openURL(data.privacidade)}
+          style={styles.option}
+        >
           <Text category="s2">Política de Privacidade</Text>
           <Entypo
             name="eye-with-line"
