@@ -1,8 +1,9 @@
 <div align="center">
   <h1>DivineSpeakers</h1>
  
-   <p>Screens</p>
-  
+  ![1692794386260](https://github.com/Neves369/DivineSpeakers/assets/63128431/0d55dd7b-c440-4ac9-b183-e4c5eb83cd58)
+  ![1692794386228](https://github.com/Neves369/DivineSpeakers/assets/63128431/4053bfc0-e539-433c-a8e1-a56aee81aad3)
+  ![1692794386217](https://github.com/Neves369/DivineSpeakers/assets/63128431/80f1c87d-5d55-4944-81f5-ced5fe469e3b)
  
   
   
@@ -12,8 +13,12 @@
   
 </div>
 
-<div align="center">
+<div align="left">
   
+ # Available soon at:
+  
+  - [GetJar](https.getjar.mobi/mobile/993337/Divine-Speakers)
+  - [Amazon App Store](https.getjar.mobi/mobile/993337/Divine-Speakers)
 </div>
 
 <br>
