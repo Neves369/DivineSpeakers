@@ -19,7 +19,7 @@
 <br>
 <br>
 
->Status: Developing ⚠️
+>Status: first finished version ✔️
 #  📱 Technologies
 
   - [Node.js](https://nodejs.org/en/)
