@@ -18,7 +18,7 @@
  # Available soon at:
   
   - [GetJar](www.getjar.mobi/mobile/993337/Divine-Speakers)
-  - [Amazon App Store](https.getjar.mobi/mobile/993337/Divine-Speakers)
+  - [Amazon App Store](https://www.amazon.com/gp/product/B0CGF4WBVV)
 </div>
 
 <br>
