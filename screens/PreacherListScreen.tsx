@@ -8,19 +8,18 @@ import {
 } from "@ui-kitten/components";
 import { Ionicons } from "@expo/vector-icons";
 import { ToastAndroid, View } from "react-native";
-import { MessageItem } from "../components/message-item";
+import { PreacherItem } from "../components/preacherItem";
 import firestore from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useCallback, useEffect, memo } from "react";
 
-const Menu = () => {
+const PreacherList = () => {
   const navigation = useNavigation();
   const [offset, setOffset] = useState(null);
   const styles = useStyleSheet(themedStyles);
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [isListEnd, setisListEnd] = useState(false);
-  const [searchQuery, setSearchQuery] = useState<string>("Tozer");
 
   const getData = async () => {
     if (!loading && !isListEnd) {
@@ -51,31 +50,6 @@ const Menu = () => {
     }
   };
 
-  function getFiltredData() {
-    if (!loading) {
-      setLoading(true);
-      firestore()
-        .collection("autores")
-        .where("name", "in", searchQuery)
-        .orderBy("nome")
-        .get()
-        .then((query: any) => {
-          if (query.docs.length > 0) {
-            setData(query.docs);
-            setLoading(false);
-          } else {
-            setLoading(false);
-          }
-        })
-        .catch((error) => {
-          ToastAndroid.show(
-            "Não foi possível buscar dados!",
-            ToastAndroid.SHORT
-          );
-        });
-    }
-  }
-
   useEffect(() => {
     if (data.length == 0) {
       setData([]);
@@ -88,7 +62,7 @@ const Menu = () => {
 
   const renderItem = useCallback(({ item, index }: any) => {
     return (
-      <MessageItem
+      <PreacherItem
         style={styles.item}
         message={item}
         onPress={() => {
@@ -98,25 +72,6 @@ const Menu = () => {
       />
     );
   }, []);
-
-  const renderHeader = (): React.ReactElement => (
-    <Layout style={styles.header} level="1">
-      <Input
-        placeholder="Search"
-        value={searchQuery}
-        //@ts-nocheck
-        accessoryRight={
-          <Ionicons
-            name="search"
-            size={24}
-            onPress={() => {
-              getFiltredData();
-            }}
-          />
-        }
-      />
-    </Layout>
-  );
 
   const renderFooter = (): React.ReactElement => (
     <View
@@ -136,7 +91,6 @@ const Menu = () => {
       style={styles.list}
       data={data}
       renderItem={renderItem}
-      // ListHeaderComponent={renderHeader}
       ListFooterComponent={renderFooter}
       onEndReachedThreshold={0.5}
       keyExtractor={(item) => `${item.ref}`}
@@ -147,7 +101,7 @@ const Menu = () => {
   );
 };
 
-export default memo(Menu);
+export default memo(PreacherList);
 
 const themedStyles = StyleService.create({
   list: {

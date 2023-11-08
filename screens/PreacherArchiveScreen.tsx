@@ -1,6 +1,5 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView, ToastAndroid } from "react-native";
-import tempImage from "../assets/background.png";
 import {
   Layout,
   Text,
@@ -10,19 +9,12 @@ import {
   Spinner,
   Divider,
 } from "@ui-kitten/components";
-import {
-  BannerAd,
-  BannerAdSize,
-  TestIds,
-  InterstitialAd,
-  AdEventType,
-} from "react-native-google-mobile-ads";
+import { InterstitialAd, AdEventType } from "react-native-google-mobile-ads";
 import { Image } from "expo-image";
 import WebView from "react-native-webview";
 import storage from "@react-native-firebase/storage";
 import DownloadFile from "../components/downloadFile";
-import { ArchiveItem } from "../components/archive-item";
-import AuthContext from "../context/auth";
+import { ArchiveItem } from "../components/preacherArchiveItem";
 
 const interstitial = InterstitialAd.createForAdRequest(
   "ca-app-pub-9187411594153289/4560480625",
@@ -31,13 +23,12 @@ const interstitial = InterstitialAd.createForAdRequest(
   }
 );
 
-const Archive = ({ route, navigation }: any) => {
+const PreacherArchive = ({ route, navigation }: any) => {
   const [screen, setScreen] = useState(0);
   const [audios, setAudios] = useState<any>([]);
   const [autor, setAutor] = useState(route.params);
   const [isLoading, setIsLoading] = useState(false);
   const [archives, setArchives] = useState<any>([]);
-  // const { changeSelectAudio }: any = useContext(AuthContext);
   const [interstitialLoaded, setInterstitialLoaded] = useState(false);
 
   useEffect(() => {
@@ -150,16 +141,6 @@ const Archive = ({ route, navigation }: any) => {
             zIndex: -999,
           }}
         />
-        {/* <View
-          style={{
-            backgroundColor: "black",
-            height: 250,
-            width: "100%",
-            position: "absolute",
-            top: -20,
-            zIndex: -999,
-          }}
-        /> */}
       </>
     );
   };
@@ -285,7 +266,7 @@ const Archive = ({ route, navigation }: any) => {
   );
 };
 
-export default Archive;
+export default PreacherArchive;
 
 const styles = StyleSheet.create({
   list: {

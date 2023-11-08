@@ -1,33 +1,41 @@
-import React from "react";
+import { Image } from "expo-image";
+import React, { useCallback } from "react";
 import { ListItem, Text } from "@ui-kitten/components";
 import { StyleSheet, View, ViewStyle } from "react-native";
-import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 
-export const ArchiveItem = (props: any) => {
+export const CatchismItem = (props: any) => {
   const { message, onPress, ...listItemProps } = props;
+
+  console.log(onPress);
 
   const renderMessageDate = (style: ViewStyle): React.ReactElement => (
     <View style={styles.dateContainer}>
       <Text style={styles.dateText} appearance="hint" category="c1">
-        {message._data.nascimento}
+        {message.ano}
       </Text>
     </View>
   );
 
-  const renderProfileAvatar = (): React.ReactElement =>
-    message.name.toLowerCase().endsWith(`pdf`) ? (
-      <FontAwesome name="file-pdf-o" size={20} color="gray" />
-    ) : (
-      <MaterialIcons name="multitrack-audio" size={24} color="gray" />
-    );
+  // const renderProfileAvatar = useCallback(
+  //   (): React.ReactElement => (
+  //     <Image
+  //       cachePolicy={"disk"}
+  //       style={styles.avatar}
+  //       contentFit="fill"
+  //       source={{ uri: "" }}
+  //     />
+  //   ),
+  //   []
+  // );
 
   return (
     <ListItem
       {...listItemProps}
       onPress={onPress}
-      title={message.name.substr(0, message.name.length - 4)}
-      accessoryLeft={renderProfileAvatar}
-      // accessoryRight={renderMessageDate}
+      title={message.titulo}
+      description={message.autor}
+      // accessoryLeft={renderProfileAvatar}
+      accessoryRight={renderMessageDate}
     />
   );
 };
@@ -37,6 +45,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     marginRight: 10,
+    borderRadius: 20,
   },
   dateContainer: {
     flexDirection: "row",

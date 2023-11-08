@@ -5,6 +5,7 @@ import {
   useStyleSheet,
   Text,
 } from "@ui-kitten/components";
+import { Linking, TouchableOpacity } from "react-native";
 import data from "../data.json";
 import React, { useState, memo } from "react";
 
@@ -18,8 +19,14 @@ const Contact = () => {
           O aplicativo Divine Speakers é desenvolvido por Douglas Brian Neves.
           Em caso de problemas, elogios, críticas e sugestões por favor entrar
           em contato:
-          {`\n\n ${data.contato}`}
         </Text>
+        <TouchableOpacity
+          onPress={() => {
+            Linking.openURL(`mailto:${data.contato}`);
+          }}
+        >
+          <Text>{`\n ${data.contato}`}</Text>
+        </TouchableOpacity>
       </Card>
     </Layout>
   );

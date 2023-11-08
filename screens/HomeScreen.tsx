@@ -240,7 +240,7 @@ const Home = () => {
             onPress={() => {
               setVisibleMenu(false);
               //@ts-ignore
-              navigation.navigate("Menu");
+              navigation.navigate("Pregadores");
             }}
             accessoryLeft={() => (
               <Fontisto name="person" size={24} color="black" />
@@ -276,7 +276,7 @@ const Home = () => {
             onPress={() => {
               setVisibleMenu(false);
               //@ts-ignore
-              navigation.navigate("Menu");
+              navigation.navigate("Catecismos");
             }}
             accessoryLeft={() => (
               <MaterialCommunityIcons

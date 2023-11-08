@@ -3,7 +3,7 @@ import React, { useCallback } from "react";
 import { ListItem, Text } from "@ui-kitten/components";
 import { StyleSheet, View, ViewStyle } from "react-native";
 
-export const MessageItem = (props: any) => {
+export const PreacherItem = (props: any) => {
   const { message, onPress, ...listItemProps } = props;
 
   const renderMessageDate = (style: ViewStyle): React.ReactElement => (
