@@ -13,7 +13,6 @@ import {
   View,
   Modal,
   ScrollView,
-  ToastAndroid,
   TouchableOpacity,
   Linking,
 } from "react-native";
