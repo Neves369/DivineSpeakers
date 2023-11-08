@@ -139,7 +139,8 @@ const Archive = ({ route, navigation }: any) => {
           </Button>
         </Layout>
         <Image
-          source={tempImage}
+          source={autor.capa}
+          cachePolicy={"disk"}
           style={{
             backgroundColor: "black",
             height: 250,

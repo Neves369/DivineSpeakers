@@ -17,8 +17,23 @@ import {
 import { Image } from "expo-image";
 import AuthContext from "../context/auth";
 const { width } = Dimensions.get("screen");
-import { Spinner, Text } from "@ui-kitten/components";
-import { Entypo, Ionicons } from "@expo/vector-icons";
+import {
+  Button,
+  Divider,
+  MenuItem,
+  OverflowMenu,
+  Spinner,
+  Text,
+} from "@ui-kitten/components";
+import {
+  AntDesign,
+  Entypo,
+  Ionicons,
+  Fontisto,
+  FontAwesome5,
+  MaterialIcons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
 
@@ -28,6 +43,7 @@ const Home = () => {
   const [show, setShow] = useState(false);
   const [data, setData] = useState<any>([]);
   const { theme }: any = useContext(AuthContext);
+  const [visibleMenu, setVisibleMenu] = useState(false);
 
   const onScroll = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -46,6 +62,7 @@ const Home = () => {
       .onSnapshot((query: any) => {
         if (query.docs.length > 0) {
           let filter: [] = query.docs.map((item: any) => item._data);
+          //@ts-ignore
           filter.unshift(theme);
           setData(filter);
 
@@ -66,7 +83,7 @@ const Home = () => {
           }}
           onPress={() => {
             //@ts-ignore
-            navigation.navigate("Archive", item);
+            navigation.navigate("Arquivos", item);
           }}
           disabled={index == 0 ? true : false}
         >
@@ -180,6 +197,19 @@ const Home = () => {
     }
   };
 
+  const renderToggleButton = (): React.ReactElement => (
+    <Entypo
+      name="menu"
+      size={30}
+      color="white"
+      style={{ position: "absolute", left: 8 }}
+      onPress={() => {
+        //@ts-ignore
+        setVisibleMenu(true);
+      }}
+    />
+  );
+
   useEffect(() => {
     if (data.length == 0 && theme) {
       getData();
@@ -200,24 +230,123 @@ const Home = () => {
           paddingLeft: 12,
         }}
       >
-        <Entypo
-          name="menu"
-          size={30}
-          color="white"
-          style={{ position: "absolute", left: 8 }}
-          onPress={() => {
-            //@ts-ignore
-            navigation.navigate("Menu");
-          }}
-        />
+        <OverflowMenu
+          anchor={renderToggleButton}
+          visible={visibleMenu}
+          style={{ maxHeight: 420, width: 200 }}
+          onBackdropPress={() => setVisibleMenu(false)}
+        >
+          <MenuItem
+            onPress={() => {
+              setVisibleMenu(false);
+              //@ts-ignore
+              navigation.navigate("Menu");
+            }}
+            accessoryLeft={() => (
+              <Fontisto name="person" size={24} color="black" />
+            )}
+            title={"PREGADORES"}
+          />
+          <Divider />
+          <MenuItem
+            onPress={() => {
+              setVisibleMenu(false);
+              //@ts-ignore
+              navigation.navigate("Menu");
+            }}
+            accessoryLeft={() => (
+              <FontAwesome5 name="book-reader" size={24} color="black" />
+            )}
+            title={"CONFSSÕES DE FÉ"}
+          />
+          <Divider />
+          <MenuItem
+            onPress={() => {
+              setVisibleMenu(false);
+              //@ts-ignore
+              navigation.navigate("Menu");
+            }}
+            accessoryLeft={() => (
+              <MaterialIcons name="menu-book" size={24} color="black" />
+            )}
+            title={"CREDOS"}
+          />
+          <Divider />
+          <MenuItem
+            onPress={() => {
+              setVisibleMenu(false);
+              //@ts-ignore
+              navigation.navigate("Menu");
+            }}
+            accessoryLeft={() => (
+              <MaterialCommunityIcons
+                name="shield-cross-outline"
+                size={24}
+                color="black"
+              />
+            )}
+            title={"CATECISMOS"}
+          />
+          <Divider />
+          <MenuItem
+            onPress={() => {
+              setVisibleMenu(false);
+              //@ts-ignore
+              navigation.navigate("Menu");
+            }}
+            accessoryLeft={() => (
+              <MaterialCommunityIcons
+                name="book-cross"
+                size={24}
+                color="black"
+              />
+            )}
+            title={"OUTROS"}
+          />
+          <Divider />
+          <MenuItem
+            onPress={() => {
+              setVisibleMenu(false);
+              //@ts-ignore
+              navigation.navigate("Sobre");
+            }}
+            accessoryLeft={() => (
+              <AntDesign name="infocirlce" size={24} color="black" />
+            )}
+            title={"SOBRE"}
+          />
+          <Divider />
+          <MenuItem
+            onPress={() => {
+              setVisibleMenu(false);
+              //@ts-ignore
+              navigation.navigate("Contato");
+            }}
+            accessoryLeft={() => <Entypo name="mail" size={24} color="black" />}
+            title={"CONTATO"}
+          />
+          <Divider />
+          <MenuItem
+            onPress={() => {
+              setVisibleMenu(false);
+              //@ts-ignore
+              navigation.navigate("Doação");
+            }}
+            accessoryLeft={() => (
+              <FontAwesome5 name="hand-holding-heart" size={24} color="black" />
+            )}
+            title={"DOAÇÃO"}
+          />
+        </OverflowMenu>
+
         <Ionicons
           name="settings-sharp"
           size={30}
           color="white"
-          style={{ position: "absolute", right: 8 }}
+          style={{ position: "absolute", right: 25, top: 25 }}
           onPress={() => {
             //@ts-ignore
-            navigation.navigate("Settings");
+            navigation.navigate("Configurações");
           }}
         />
       </View>

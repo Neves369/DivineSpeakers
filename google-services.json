@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "237706746310",
+    "project_id": "divinespeakers-e75ff",
+    "storage_bucket": "divinespeakers-e75ff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237706746310:android:d289d789ca7bae1f1d3ac7",
+        "android_client_info": {
+          "package_name": "com.neves369.divinespeakers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "237706746310-r73joqltrttctgt6rekgl3ljh9r3ah5s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsX02uDEFfQY3oGt7PA27JFYctwbIUoHI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "237706746310-r73joqltrttctgt6rekgl3ljh9r3ah5s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

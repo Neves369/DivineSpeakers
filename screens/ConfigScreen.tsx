@@ -40,7 +40,6 @@ const Settings = () => {
   const getPermissionNotification = async () => {
     let notif = await AsyncStorage.getItem("notifications");
     if (notif) {
-      console.log("o que é notif? ", notif);
       setNotification(Boolean(notif));
     }
   };
@@ -53,7 +52,6 @@ const Settings = () => {
       .get()
       .then((query: any) => {
         if (query.docs.length > 0) {
-          console.log("not: ", not);
           firestore()
             .collection("tokens")
             .doc(query.docs[0].id)
@@ -64,6 +62,8 @@ const Settings = () => {
         }
       });
   };
+
+  const clearAll = async () => {};
 
   return (
     <Layout style={styles.container}>
@@ -104,7 +104,12 @@ const Settings = () => {
           />
         </TouchableOpacity>
         <Divider />
-        {/* <TouchableOpacity style={styles.option}>
+        {/* <TouchableOpacity
+          style={styles.option}
+          onPress={() => {
+            clearAll();
+          }}
+        >
           <Text category="s2">Limpar Cache</Text>
           <Entypo name="trash" size={24} color="rgba(255, 0, 0, 0.3)" />
         </TouchableOpacity> */}

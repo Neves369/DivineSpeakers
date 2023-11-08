@@ -93,7 +93,7 @@ const Menu = () => {
         message={item}
         onPress={() => {
           //@ts-ignore
-          navigation.navigate("Archive", item);
+          navigation.navigate("Arquivos", item);
         }}
       />
     );
