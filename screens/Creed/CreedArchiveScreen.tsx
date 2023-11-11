@@ -1,5 +1,6 @@
 import { InterstitialAd, AdEventType } from "react-native-google-mobile-ads";
 import { View, StyleSheet, ScrollView, Modal } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Layout,
   Text,
@@ -9,10 +10,9 @@ import {
   List,
   ListItem,
 } from "@ui-kitten/components";
-import React, { useCallback, useEffect, useState } from "react";
-import { StatusBar } from "expo-status-bar";
 import { Image } from "expo-image";
-import data from "../data.json";
+import { StatusBar } from "expo-status-bar";
+import { AntDesign } from "@expo/vector-icons";
 
 const interstitial = InterstitialAd.createForAdRequest(
   "ca-app-pub-9187411594153289/4560480625",
@@ -21,14 +21,15 @@ const interstitial = InterstitialAd.createForAdRequest(
   }
 );
 
-const CatechismArchive = ({ route, navigation }: any) => {
+const CreedArchive = ({ route, navigation }: any) => {
   const [show, setShow] = useState(false);
-  const [capitulos, setCapitulos] = useState<any>([]);
+  const [titulo, setTitulo] = useState("");
+  const [fontSize, setFontSize] = useState(14);
   const [documento, setDocumento] = useState(route.params);
+  const [textoSelecionado, setTextoSelecionado] = useState("");
   const [interstitialLoaded, setInterstitialLoaded] = useState(false);
 
   useEffect(() => {
-    setCapitulos(Object.keys(documento.texto));
     const unsubscribeInterstitialEvents = loadInterstitial();
     return () => {
       unsubscribeInterstitialEvents();
@@ -41,7 +42,7 @@ const CatechismArchive = ({ route, navigation }: any) => {
         <Layout style={styles.header} level="1">
           <View style={styles.profileDetailsContainer}>
             <Text
-              // category="h4"
+              category="h5"
               style={{ textAlign: "center", marginHorizontal: 10 }}
             >
               {documento.titulo}
@@ -67,10 +68,6 @@ const CatechismArchive = ({ route, navigation }: any) => {
     );
   };
 
-  const renderItem = useCallback(({ item, index }: any) => {
-    return <ListItem title={item} onPress={() => {}} />;
-  }, []);
-
   const loadInterstitial = () => {
     const unsubscribeLoaded = interstitial.addAdEventListener(
       AdEventType.LOADED,
@@ -94,70 +91,101 @@ const CatechismArchive = ({ route, navigation }: any) => {
     };
   };
 
+  const changeFont = (item: any) => {
+    setFontSize(fontSize + item);
+  };
+
+  const selectCap = (item: any) => {
+    setTitulo(item);
+    setTextoSelecionado(documento.texto);
+    setShow(true);
+  };
+
   return (
     <>
       {renderHeader()}
       <ScrollView>
         <Card style={{ margin: 7 }}>
-          <Text style={{ textAlign: "justify" }}>{documento.descricao}</Text>
+          <Text style={{ textAlign: "justify", letterSpacing: 0.5 }}>
+            {documento.descricao}
+          </Text>
         </Card>
         <Card style={{ margin: 7 }}>
-          <List
-            style={styles.list}
-            data={capitulos?.sort()}
-            renderItem={renderItem}
-            ItemSeparatorComponent={Divider}
-            ListEmptyComponent={
-              <View
-                style={{
-                  width: "100%",
-                  height: 25,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Text style={{ textAlign: "center", color: "grey" }}>
-                  Nenhum capítulo encontrado
-                </Text>
-              </View>
-            }
+          <Text style={{ textAlign: "justify", fontWeight: "bold" }}>
+            Texto
+          </Text>
+          <ListItem
+            title={`1 - ${documento.titulo}`}
+            onPress={() => {
+              selectCap(documento.titulo);
+            }}
           />
         </Card>
       </ScrollView>
 
-      {/* <Modal visible={show} style={styles.backdrop}>
+      <Modal visible={show} style={styles.backdrop}>
         <StatusBar backgroundColor="white" />
         <Card
           disabled={true}
           style={{ width: "100%", height: "100%", backgroundColor: "white" }}
         >
           <Text style={{ textAlign: "center", fontWeight: "bold" }}>
-            {documento.titulo}
+            {titulo}
           </Text>
           <View style={{ height: 10 }} />
-          <ScrollView showsVerticalScrollIndicator>
-            <Text style={{ textAlign: "justify", fontSize: 14 }}>
-              {documento.texto.replaceAll("<br />", "\n")}
+          <ScrollView showsVerticalScrollIndicator style={{ minHeight: "90%" }}>
+            <Text
+              style={{
+                textAlign: "justify",
+                fontSize: fontSize,
+                paddingBottom: 10,
+              }}
+            >
+              {textoSelecionado.replaceAll("<br />", "\n")}
             </Text>
           </ScrollView>
-          <View style={{ height: 80, justifyContent: "center" }}>
-            <View style={{ height: 10 }} />
-            <Button
-              status="warning"
+          <View
+            style={{
+              borderTopColor: "grey",
+              borderTopWidth: 1,
+              height: 80,
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexDirection: "row",
+            }}
+          >
+            <AntDesign
+              name="minuscircleo"
+              size={30}
+              color="black"
+              onPress={() => {
+                changeFont(-1);
+              }}
+            />
+            <AntDesign
+              name="menufold"
+              size={30}
+              color="black"
               onPress={() => {
                 setShow(false);
               }}
-            >
-              FECHAR
-            </Button>
+            />
+            <AntDesign
+              name="pluscircleo"
+              size={30}
+              color="black"
+              onPress={() => {
+                changeFont(1);
+              }}
+            />
           </View>
         </Card>
-      </Modal> */}
+      </Modal>
     </>
   );
 };
 
-export default CatechismArchive;
+export default CreedArchive;
 
 const styles = StyleSheet.create({
   list: {

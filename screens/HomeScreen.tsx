@@ -252,7 +252,7 @@ const Home = () => {
             onPress={() => {
               setVisibleMenu(false);
               //@ts-ignore
-              navigation.navigate("Menu");
+              navigation.navigate("Em breve");
             }}
             accessoryLeft={() => (
               <FontAwesome5 name="book-reader" size={24} color="black" />
@@ -264,7 +264,7 @@ const Home = () => {
             onPress={() => {
               setVisibleMenu(false);
               //@ts-ignore
-              navigation.navigate("Menu");
+              navigation.navigate("Credos");
             }}
             accessoryLeft={() => (
               <MaterialIcons name="menu-book" size={24} color="black" />
@@ -292,7 +292,7 @@ const Home = () => {
             onPress={() => {
               setVisibleMenu(false);
               //@ts-ignore
-              navigation.navigate("Menu");
+              navigation.navigate("Em breve");
             }}
             accessoryLeft={() => (
               <MaterialCommunityIcons

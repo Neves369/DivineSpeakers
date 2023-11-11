@@ -8,25 +8,26 @@ import {
 } from "@ui-kitten/components";
 import { Ionicons } from "@expo/vector-icons";
 import { ToastAndroid, View } from "react-native";
-import { PreacherItem } from "../components/preacherItem";
 import firestore from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
+import { CatchismItem } from "../../components/catechismItem";
 import React, { useState, useCallback, useEffect, memo } from "react";
 
-const PreacherList = () => {
+const CatechismList = () => {
   const navigation = useNavigation();
   const [offset, setOffset] = useState(null);
   const styles = useStyleSheet(themedStyles);
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [isListEnd, setisListEnd] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<string>("Tozer");
 
   const getData = async () => {
     if (!loading && !isListEnd) {
       setLoading(true);
       firestore()
-        .collection("autores")
-        .orderBy("nome")
+        .collection("catecismos")
+        .orderBy("titulo")
         .startAfter(offset)
         .limit(10)
         .get()
@@ -50,24 +51,15 @@ const PreacherList = () => {
     }
   };
 
-  useEffect(() => {
-    if (data.length == 0) {
-      setData([]);
-      setOffset(null);
-      setLoading(false);
-      setisListEnd(false);
-      getData();
-    }
-  }, []);
-
   const renderItem = useCallback(({ item, index }: any) => {
     return (
-      <PreacherItem
+      <CatchismItem
+        key={item.titulo}
         style={styles.item}
         message={item}
         onPress={() => {
           //@ts-ignore
-          navigation.navigate("Arquivos", item);
+          navigation.navigate("Catecismo", item);
         }}
       />
     );
@@ -91,9 +83,10 @@ const PreacherList = () => {
       style={styles.list}
       data={data}
       renderItem={renderItem}
+      // ListHeaderComponent={renderHeader}
       ListFooterComponent={renderFooter}
       onEndReachedThreshold={0.5}
-      keyExtractor={(item) => `${item.ref}`}
+      keyExtractor={(item) => `${item.titulo}`}
       onEndReached={() => {
         getData();
       }}
@@ -101,7 +94,7 @@ const PreacherList = () => {
   );
 };
 
-export default memo(PreacherList);
+export default memo(CatechismList);
 
 const themedStyles = StyleService.create({
   list: {

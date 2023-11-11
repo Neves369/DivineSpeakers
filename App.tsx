@@ -1,8 +1,8 @@
 import Routes from "./routes";
 import * as eva from "@eva-design/eva";
+import React, { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { AuthProvider } from "./context/auth";
-import React, { useEffect } from "react";
 import messaging from "@react-native-firebase/messaging";
 import firestore from "@react-native-firebase/firestore";
 import { ApplicationProvider } from "@ui-kitten/components";

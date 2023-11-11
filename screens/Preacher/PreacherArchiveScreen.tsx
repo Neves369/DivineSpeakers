@@ -1,5 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { View, StyleSheet, ScrollView, ToastAndroid } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  ToastAndroid,
+  TouchableOpacity,
+} from "react-native";
 import {
   Layout,
   Text,
@@ -9,12 +15,12 @@ import {
   Spinner,
   Divider,
 } from "@ui-kitten/components";
-import { InterstitialAd, AdEventType } from "react-native-google-mobile-ads";
 import { Image } from "expo-image";
-import WebView from "react-native-webview";
 import storage from "@react-native-firebase/storage";
-import DownloadFile from "../components/downloadFile";
-import { ArchiveItem } from "../components/preacherArchiveItem";
+import YoutubePlayer from "react-native-youtube-iframe";
+import DownloadFile from "../../components/downloadFile";
+import { ArchiveItem } from "../../components/preacherArchiveItem";
+import { InterstitialAd, AdEventType } from "react-native-google-mobile-ads";
 
 const interstitial = InterstitialAd.createForAdRequest(
   "ca-app-pub-9187411594153289/4560480625",
@@ -192,19 +198,7 @@ const PreacherArchive = ({ route, navigation }: any) => {
       {screen == 0 ? (
         <ScrollView>
           <Card style={{ margin: 7 }} disabled>
-            <WebView
-              style={{
-                height: 300,
-                width: "100%",
-                backgroundColor: "black",
-              }}
-              javaScriptEnabled={true}
-              scrollEnabled={false}
-              allowsFullscreenVideo={false}
-              source={{
-                uri: `https://www.youtube.com/embed/${autor.video}?&autoplay=0&mute=0&showinfo=0&controls=1&fullscreen=1`,
-              }}
-            />
+            <YoutubePlayer height={200} videoId={autor.video} />
           </Card>
           <Card style={{ margin: 7 }}>
             <Text style={{ textAlign: "justify" }}>{autor.descricao}</Text>
