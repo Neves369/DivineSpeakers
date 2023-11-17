@@ -1,10 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   View,
   StyleSheet,
   ScrollView,
   ToastAndroid,
-  TouchableOpacity,
+  AppState,
+  Linking,
+  ActivityIndicator,
 } from "react-native";
 import {
   Layout,
@@ -32,10 +34,15 @@ const interstitial = InterstitialAd.createForAdRequest(
 const PreacherArchive = ({ route, navigation }: any) => {
   const [screen, setScreen] = useState(0);
   const [audios, setAudios] = useState<any>([]);
+  const [playing, setPlaying] = useState(false);
   const [autor, setAutor] = useState(route.params);
   const [isLoading, setIsLoading] = useState(false);
   const [archives, setArchives] = useState<any>([]);
+  const [videoReady, setVideoReady] = useState(false);
   const [interstitialLoaded, setInterstitialLoaded] = useState(false);
+
+  const appState = useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
   useEffect(() => {
     const unsubscribeInterstitialEvents = loadInterstitial();
@@ -45,22 +52,29 @@ const PreacherArchive = ({ route, navigation }: any) => {
       }
     }
 
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      appState.current = nextAppState;
+      setAppStateVisible(appState.current);
+    });
+
     return () => {
       unsubscribeInterstitialEvents();
+      subscription.remove();
     };
   }, [screen]);
 
   async function listDocumentsInFolder(folderPath: string) {
     setIsLoading(true);
+
     try {
       const reference = storage().ref(folderPath);
       const listResult = await reference.listAll();
-
+      let keys = Object.keys(autor.audios);
+      keys = keys.sort();
       let filterDocs = await separateDocs(listResult, "pdf");
-      let filterAudios = await separateDocs(listResult, "mp3");
 
+      setAudios(keys);
       setArchives(filterDocs);
-      setAudios(filterAudios);
       setIsLoading(false);
     } catch (error: any) {
       setIsLoading(false);
@@ -178,17 +192,23 @@ const PreacherArchive = ({ route, navigation }: any) => {
     return (
       <ArchiveItem
         style={styles.item}
-        message={item}
+        message={typeof item == "string" ? item : item.name}
         onPress={() => {
           interstitial.show();
           setTimeout(() => {
-            item.name.substr(-3) == "pdf"
-              ? DownloadFile(item, "pdf")
-              : DownloadFile(item, "mp3");
+            typeof item == "string"
+              ? Linking.openURL(autor.audios[item])
+              : DownloadFile(item, "pdf");
           }, 3000);
         }}
       />
     );
+  }, []);
+
+  const onStateChange = useCallback((state: any) => {
+    if (state === "ended") {
+      setPlaying(false);
+    }
   }, []);
 
   return (
@@ -197,9 +217,22 @@ const PreacherArchive = ({ route, navigation }: any) => {
 
       {screen == 0 ? (
         <ScrollView>
-          <Card style={{ margin: 7 }} disabled>
-            <YoutubePlayer height={200} videoId={autor.video} />
-          </Card>
+          {/* <Card style={{ margin: 7 }} disabled>
+            {appStateVisible == "active" ? (
+              <>
+                <YoutubePlayer
+                  height={videoReady ? 200 : 0}
+                  videoId={autor.video}
+                  play={playing}
+                  onReady={() => setVideoReady(true)}
+                  onChangeState={onStateChange}
+                />
+                {!videoReady && <ActivityIndicator color="red" />}
+              </>
+            ) : (
+              <></>
+            )}
+          </Card> */}
           <Card style={{ margin: 7 }}>
             <Text style={{ textAlign: "justify" }}>{autor.descricao}</Text>
           </Card>
@@ -233,6 +266,7 @@ const PreacherArchive = ({ route, navigation }: any) => {
         <List
           style={styles.list}
           data={audios}
+          ItemSeparatorComponent={Divider}
           renderItem={renderItem}
           ListEmptyComponent={
             <View

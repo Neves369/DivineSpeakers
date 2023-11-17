@@ -1,8 +1,7 @@
-import * as Sharing from "expo-sharing";
+import { ToastAndroid } from "react-native";
 import * as FileSystem from "expo-file-system";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ToastAndroid, Share } from "react-native";
 import * as IntentLauncher from "expo-intent-launcher";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 let Permission: any;
 
@@ -14,42 +13,49 @@ const saveAndroidFile = async (fileUri: any, fileName: any, type: string) => {
       fileUri as string
     );
 
-    const fileString = await FileSystem.readAsStringAsync(fileUri, {
-      encoding: FileSystem.EncodingType.Base64,
-    });
-    try {
-      const directoryUri = await AsyncStorage.getItem("permissionDirectoryUrl");
-      if (!directoryUri) {
-        const permissions =
-          await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
-        if (!permissions.granted) {
-          return;
-        } else {
-          await AsyncStorage.setItem(
-            "permissionDirectoryUrl",
-            permissions.directoryUri
-          );
-          Permission = permissions.directoryUri;
-        }
-      } else {
-        Permission = directoryUri;
-      }
-      await FileSystem.StorageAccessFramework.createFileAsync(
-        Permission,
-        fileName,
-        type == "pdf" ? "application/pdf+zip" : "audio/mp3"
-      )
-        .then(async (uri: string) => {
-          await FileSystem.writeAsStringAsync(uri, fileString, {
-            encoding: FileSystem.EncodingType.Base64,
-          });
-        })
-        .catch((e: string) => {
-          ToastAndroid.show(`${e}`, ToastAndroid.SHORT);
-        });
-    } catch (e) {
-      ToastAndroid.show(`${e}`, ToastAndroid.SHORT);
-    }
+    // const fileString = await FileSystem.readAsStringAsync(fileUri, {
+    //   encoding: FileSystem.EncodingType.Base64,
+    // });
+    // try {
+    //   const directoryUri = await AsyncStorage.getItem("permissionDirectoryUrl");
+    //   if (!directoryUri) {
+    //     const permissions =
+    //       await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+    //     if (!permissions.granted) {
+    //       return;
+    //     } else {
+    //       await AsyncStorage.setItem(
+    //         "permissionDirectoryUrl",
+    //         permissions.directoryUri
+    //       );
+    //       Permission = permissions.directoryUri;
+    //     }
+    //   } else {
+    //     Permission = directoryUri;
+    //   }
+
+    //   const directorycreated: any =
+    //     await FileSystem.StorageAccessFramework.makeDirectoryAsync(
+    //       Permission,
+    //       "Teste"
+    //     );
+
+    //   // await FileSystem.StorageAccessFramework.createFileAsync(
+    //   //   Permission,
+    //   //   fileName,
+    //   //   type == "pdf" ? "application/pdf+zip" : "audio/mp3"
+    //   // )
+    //   //   .then(async (uri: string) => {
+    //   //     await FileSystem.writeAsStringAsync(uri, fileString, {
+    //   //       encoding: FileSystem.EncodingType.Base64,
+    //   //     });
+    //   //   })
+    //   //   .catch((e: string) => {
+    //   //     ToastAndroid.show(`${e}`, ToastAndroid.SHORT);
+    //   //   });
+    // } catch (e) {
+    //   ToastAndroid.show(`${e}`, ToastAndroid.SHORT);
+    // }
   } catch (err) {
     ToastAndroid.show(`${err}`, ToastAndroid.SHORT);
   }
@@ -60,14 +66,11 @@ const verifyFile = async (item: any, type: string) => {
   let ref = await AsyncStorage.getItem(
     type == "pdf" ? "OfflinePDF" + item.name : "OfflineMP3" + item.name
   );
+
   if (ref) {
     await FileSystem.getInfoAsync(ref).then((response) => {
       const { exists, uri } = response;
       if (exists) {
-        // Sharing.shareAsync(uri, {
-        //   dialogTitle: "Abrir com...",
-        //   mimeType: "application/pdf",
-        // });
         FileSystem.getContentUriAsync(uri).then((cUri) => {
           IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
             data: cUri,
@@ -104,10 +107,6 @@ const downloadFile = async (item: any, type: string) => {
 
     await saveAndroidFile(downloadResult?.uri, item.name, type);
 
-    // Sharing.shareAsync(downloadResult?.uri, {
-    //   dialogTitle: "Abrir com...",
-    //   mimeType: "application/pdf",
-    // });
     await FileSystem.getContentUriAsync(downloadResult?.uri).then((cUri) => {
       IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
         data: cUri,

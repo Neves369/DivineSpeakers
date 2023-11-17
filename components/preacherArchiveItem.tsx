@@ -6,7 +6,7 @@ export const ArchiveItem = (props: any) => {
   const { message, onPress, ...listItemProps } = props;
 
   const renderProfileAvatar = (): React.ReactElement =>
-    message.name.toLowerCase().endsWith(`pdf`) ? (
+    message.toLowerCase().endsWith(`pdf`) ? (
       <FontAwesome name="file-pdf-o" size={20} color="gray" />
     ) : (
       <MaterialIcons name="multitrack-audio" size={24} color="gray" />
@@ -16,7 +16,11 @@ export const ArchiveItem = (props: any) => {
     <ListItem
       {...listItemProps}
       onPress={onPress}
-      title={message.name.substr(0, message.name.length - 4)}
+      title={
+        message.toLowerCase().endsWith(`pdf`)
+          ? message.substr(0, message.length - 4)
+          : message
+      }
       accessoryLeft={renderProfileAvatar}
     />
   );
