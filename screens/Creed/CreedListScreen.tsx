@@ -5,12 +5,15 @@ import {
   Spinner,
   StyleService,
   useStyleSheet,
+  Divider,
 } from "@ui-kitten/components";
+import { Ionicons } from "@expo/vector-icons";
 import { ToastAndroid, View } from "react-native";
-import firestore from "@react-native-firebase/firestore";
+import useColorScheme from "../../hooks/useColorScheme";
 import { useNavigation } from "@react-navigation/native";
+import firestore from "@react-native-firebase/firestore";
+import React, { useState, useCallback, memo, useEffect } from "react";
 import { CatchismItem } from "../../components/catechismItem";
-import React, { useState, useCallback, memo } from "react";
 
 const CreedList = () => {
   const navigation = useNavigation();
@@ -18,7 +21,28 @@ const CreedList = () => {
   const styles = useStyleSheet(themedStyles);
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [filter, setFilter] = useState<any[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [isListEnd, setisListEnd] = useState(false);
+
+  useEffect(() => {
+    if (searchTerm.length == 0) {
+      setFilter(data);
+    } else {
+      const resposta: any = [];
+      data.map((credo) => {
+        if (
+          credo?.titulo
+            ?.toLowerCase()
+            .normalize()
+            .indexOf(searchTerm.toLowerCase().normalize(), 0) >= 0
+        ) {
+          resposta.push(credo);
+        }
+      });
+      setFilter(resposta);
+    }
+  }, [searchTerm]);
 
   const getData = async () => {
     if (!loading && !isListEnd) {
@@ -34,6 +58,7 @@ const CreedList = () => {
             let filter = query.docs.map((item: any) => item._data);
             setOffset(query.docs[query.docs.length - 1]);
             setData([...data, ...filter]);
+            setFilter([...data, ...filter]);
             setLoading(false);
           } else {
             setisListEnd(true);
@@ -77,18 +102,40 @@ const CreedList = () => {
   );
 
   return (
-    <List
-      style={styles.list}
-      data={data}
-      renderItem={renderItem}
-      // ListHeaderComponent={renderHeader}
-      ListFooterComponent={renderFooter}
-      onEndReachedThreshold={0.5}
-      keyExtractor={(item) => `${item.titulo}`}
-      onEndReached={() => {
-        getData();
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
       }}
-    />
+    >
+      <Input
+        value={searchTerm}
+        style={{ margin: 5 }}
+        placeholder="Pesquisar"
+        accessoryRight={
+          <Ionicons
+            name="search"
+            size={24}
+            color={useColorScheme() == "light" ? "black" : "white"}
+          />
+        }
+        onChangeText={(value) => setSearchTerm(value)}
+      />
+      <Divider />
+      <List
+        style={styles.list}
+        data={filter}
+        renderItem={renderItem}
+        ListFooterComponent={renderFooter}
+        onEndReachedThreshold={0.5}
+        keyExtractor={(item) => `${item.titulo}`}
+        onEndReached={() => {
+          if (searchTerm.length == 0) {
+            getData();
+          }
+        }}
+      />
+    </View>
   );
 };
 

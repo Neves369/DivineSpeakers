@@ -5,12 +5,14 @@ import {
   Spinner,
   StyleService,
   useStyleSheet,
+  Divider,
 } from "@ui-kitten/components";
 import { Ionicons } from "@expo/vector-icons";
 import { ToastAndroid, View } from "react-native";
-import { PreacherItem } from "../../components/preacherItem";
+import useColorScheme from "../../hooks/useColorScheme";
 import firestore from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
+import { PreacherItem } from "../../components/preacherItem";
 import React, { useState, useCallback, useEffect, memo } from "react";
 
 const PreacherList = () => {
@@ -19,6 +21,8 @@ const PreacherList = () => {
   const styles = useStyleSheet(themedStyles);
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [filter, setFilter] = useState<any[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [isListEnd, setisListEnd] = useState(false);
 
   const getData = async () => {
@@ -35,6 +39,7 @@ const PreacherList = () => {
             let filter = query.docs.map((item: any) => item._data);
             setOffset(query.docs[query.docs.length - 1]);
             setData([...data, ...filter]);
+            setFilter([...data, ...filter]);
             setLoading(false);
           } else {
             setisListEnd(true);
@@ -59,6 +64,25 @@ const PreacherList = () => {
       getData();
     }
   }, []);
+
+  useEffect(() => {
+    if (searchTerm.length == 0) {
+      setFilter(data);
+    } else {
+      const resposta: any = [];
+      data.map((pregador) => {
+        if (
+          pregador?.nome
+            ?.toLowerCase()
+            .normalize()
+            .indexOf(searchTerm.toLowerCase().normalize(), 0) >= 0
+        ) {
+          resposta.push(pregador);
+        }
+      });
+      setFilter(resposta);
+    }
+  }, [searchTerm]);
 
   const renderItem = useCallback(({ item, index }: any) => {
     return (
@@ -87,17 +111,40 @@ const PreacherList = () => {
   );
 
   return (
-    <List
-      style={styles.list}
-      data={data}
-      renderItem={renderItem}
-      ListFooterComponent={renderFooter}
-      onEndReachedThreshold={0.5}
-      keyExtractor={(item) => `${item.ref}`}
-      onEndReached={() => {
-        getData();
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
       }}
-    />
+    >
+      <Input
+        value={searchTerm}
+        style={{ margin: 5 }}
+        placeholder="Pesquisar"
+        accessoryRight={
+          <Ionicons
+            name="search"
+            size={24}
+            color={useColorScheme() == "light" ? "black" : "white"}
+          />
+        }
+        onChangeText={(value) => setSearchTerm(value)}
+      />
+      <Divider />
+      <List
+        style={styles.list}
+        data={filter}
+        renderItem={renderItem}
+        ListFooterComponent={renderFooter}
+        onEndReachedThreshold={0.5}
+        keyExtractor={(item) => `${item.ref}`}
+        onEndReached={() => {
+          if (searchTerm.length == 0) {
+            getData();
+          }
+        }}
+      />
+    </View>
   );
 };
 
