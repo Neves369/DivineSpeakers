@@ -3,6 +3,7 @@ import * as eva from "@eva-design/eva";
 import React, { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { AuthProvider } from "./context/auth";
+import useColorScheme from "./hooks/useColorScheme";
 import messaging from "@react-native-firebase/messaging";
 import firestore from "@react-native-firebase/firestore";
 import { ApplicationProvider } from "@ui-kitten/components";
@@ -20,6 +21,8 @@ export default function App() {
     const token = await messaging().getToken();
     sendToken(token);
   };
+
+  console.log(useColorScheme());
 
   const sendToken = async (token: string) => {
     let enviou: any = await AsyncStorage.getItem("enviouToken");
@@ -44,7 +47,10 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <ApplicationProvider {...eva} theme={eva.light}>
+      <ApplicationProvider
+        {...eva}
+        theme={useColorScheme() == "light" ? eva.light : eva.dark}
+      >
         <StatusBar translucent />
         <AuthProvider>
           <Routes />

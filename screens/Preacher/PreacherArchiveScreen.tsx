@@ -23,6 +23,7 @@ import YoutubePlayer from "react-native-youtube-iframe";
 import DownloadFile from "../../components/downloadFile";
 import { ArchiveItem } from "../../components/preacherArchiveItem";
 import { InterstitialAd, AdEventType } from "react-native-google-mobile-ads";
+import useColorScheme from "../../hooks/useColorScheme";
 
 const interstitial = InterstitialAd.createForAdRequest(
   "ca-app-pub-9187411594153289/4560480625",
@@ -212,7 +213,12 @@ const PreacherArchive = ({ route, navigation }: any) => {
   }, []);
 
   return (
-    <>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
+      }}
+    >
       {renderHeader()}
 
       {screen == 0 ? (
@@ -290,7 +296,7 @@ const PreacherArchive = ({ route, navigation }: any) => {
       ) : (
         <></>
       )}
-    </>
+    </View>
   );
 };
 

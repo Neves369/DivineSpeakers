@@ -13,6 +13,7 @@ import {
 import { Image } from "expo-image";
 import { StatusBar } from "expo-status-bar";
 import { AntDesign } from "@expo/vector-icons";
+import useColorScheme from "../../hooks/useColorScheme";
 
 const interstitial = InterstitialAd.createForAdRequest(
   "ca-app-pub-9187411594153289/4560480625",
@@ -102,7 +103,12 @@ const CreedArchive = ({ route, navigation }: any) => {
   };
 
   return (
-    <>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
+      }}
+    >
       {renderHeader()}
       <ScrollView>
         <Card style={{ margin: 7 }}>
@@ -124,11 +130,10 @@ const CreedArchive = ({ route, navigation }: any) => {
       </ScrollView>
 
       <Modal visible={show} style={styles.backdrop}>
-        <StatusBar backgroundColor="white" />
-        <Card
-          disabled={true}
-          style={{ width: "100%", height: "100%", backgroundColor: "white" }}
-        >
+        <StatusBar
+          backgroundColor={useColorScheme() == "light" ? "#FFFFFF" : "#1A2138"}
+        />
+        <Card disabled={true} style={{ width: "100%", height: "100%" }}>
           <Text style={{ textAlign: "center", fontWeight: "bold" }}>
             {titulo}
           </Text>
@@ -157,7 +162,7 @@ const CreedArchive = ({ route, navigation }: any) => {
             <AntDesign
               name="minuscircleo"
               size={30}
-              color="black"
+              color={useColorScheme() == "light" ? "black" : "white"}
               onPress={() => {
                 changeFont(-1);
               }}
@@ -165,7 +170,7 @@ const CreedArchive = ({ route, navigation }: any) => {
             <AntDesign
               name="menufold"
               size={30}
-              color="black"
+              color={useColorScheme() == "light" ? "black" : "white"}
               onPress={() => {
                 setShow(false);
               }}
@@ -173,7 +178,7 @@ const CreedArchive = ({ route, navigation }: any) => {
             <AntDesign
               name="pluscircleo"
               size={30}
-              color="black"
+              color={useColorScheme() == "light" ? "black" : "white"}
               onPress={() => {
                 changeFont(1);
               }}
@@ -181,7 +186,7 @@ const CreedArchive = ({ route, navigation }: any) => {
           </View>
         </Card>
       </Modal>
-    </>
+    </View>
   );
 };
 

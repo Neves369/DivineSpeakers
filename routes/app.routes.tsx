@@ -8,12 +8,16 @@ import CreedListScreen from "../screens/Creed/CreedListScreen";
 import HomeScreen from "../screens/HomeScreen";
 import Settings from "../screens/ConfigScreen";
 import Contact from "../screens/Contact";
+import * as eva from "@eva-design/eva";
 import Donate from "../screens/Donate";
 import About from "../screens/About";
 import React from "react";
 import ComingSoon from "../screens/ComingSoon";
+import useColorScheme from "../hooks/useColorScheme";
 
 const AppStack = createNativeStackNavigator();
+
+console.log(eva.dark);
 
 const AppRoutes: React.FC = () => {
   return (
@@ -23,14 +27,94 @@ const AppRoutes: React.FC = () => {
         options={{ headerShown: false }}
         component={HomeScreen}
       />
-      <AppStack.Screen name="Pregadores" component={PreacherListScreen} />
-      <AppStack.Screen name="Catecismos" component={CatechismListScreen} />
-      <AppStack.Screen name="Credos" component={CreedListScreen} />
-      <AppStack.Screen name="Configurações" component={Settings} />
-      <AppStack.Screen name="Doação" component={Donate} />
-      <AppStack.Screen name="Contato" component={Contact} />
-      <AppStack.Screen name="Sobre" component={About} />
-      <AppStack.Screen name="Em breve" component={ComingSoon} />
+      <AppStack.Screen
+        name="Pregadores"
+        component={PreacherListScreen}
+        options={{
+          headerStyle: {
+            backgroundColor:
+              useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
+          },
+          headerTintColor: useColorScheme() == "light" ? "black" : "white",
+        }}
+      />
+      <AppStack.Screen
+        name="Catecismos"
+        component={CatechismListScreen}
+        options={{
+          headerStyle: {
+            backgroundColor:
+              useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
+          },
+          headerTintColor: useColorScheme() == "light" ? "black" : "white",
+        }}
+      />
+      <AppStack.Screen
+        name="Credos"
+        component={CreedListScreen}
+        options={{
+          headerStyle: {
+            backgroundColor:
+              useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
+          },
+          headerTintColor: useColorScheme() == "light" ? "black" : "white",
+        }}
+      />
+      <AppStack.Screen
+        name="Configurações"
+        component={Settings}
+        options={{
+          headerStyle: {
+            backgroundColor:
+              useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
+          },
+          headerTintColor: useColorScheme() == "light" ? "black" : "white",
+        }}
+      />
+      <AppStack.Screen
+        name="Doação"
+        component={Donate}
+        options={{
+          headerStyle: {
+            backgroundColor:
+              useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
+          },
+          headerTintColor: useColorScheme() == "light" ? "black" : "white",
+        }}
+      />
+      <AppStack.Screen
+        name="Contato"
+        component={Contact}
+        options={{
+          headerStyle: {
+            backgroundColor:
+              useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
+          },
+          headerTintColor: useColorScheme() == "light" ? "black" : "white",
+        }}
+      />
+      <AppStack.Screen
+        name="Sobre"
+        component={About}
+        options={{
+          headerStyle: {
+            backgroundColor:
+              useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
+          },
+          headerTintColor: useColorScheme() == "light" ? "black" : "white",
+        }}
+      />
+      <AppStack.Screen
+        name="Em breve"
+        component={ComingSoon}
+        options={{
+          headerStyle: {
+            backgroundColor:
+              useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
+          },
+          headerTintColor: useColorScheme() == "light" ? "black" : "white",
+        }}
+      />
 
       <AppStack.Screen
         name="Arquivos"

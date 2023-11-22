@@ -18,7 +18,6 @@ import { Image } from "expo-image";
 import AuthContext from "../context/auth";
 const { width } = Dimensions.get("screen");
 import {
-  Button,
   Divider,
   MenuItem,
   OverflowMenu,
@@ -36,6 +35,7 @@ import {
 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
+import useColorScheme from "../hooks/useColorScheme";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -243,7 +243,11 @@ const Home = () => {
               navigation.navigate("Pregadores");
             }}
             accessoryLeft={() => (
-              <Fontisto name="person" size={24} color="black" />
+              <Fontisto
+                name="person"
+                size={24}
+                color={useColorScheme() == "light" ? "black" : "white"}
+              />
             )}
             title={"PREGADORES"}
           />
@@ -255,7 +259,11 @@ const Home = () => {
               navigation.navigate("Em breve");
             }}
             accessoryLeft={() => (
-              <FontAwesome5 name="book-reader" size={24} color="black" />
+              <FontAwesome5
+                name="book-reader"
+                size={24}
+                color={useColorScheme() == "light" ? "black" : "white"}
+              />
             )}
             title={"CONFSSÕES DE FÉ"}
           />
@@ -267,7 +275,11 @@ const Home = () => {
               navigation.navigate("Credos");
             }}
             accessoryLeft={() => (
-              <MaterialIcons name="menu-book" size={24} color="black" />
+              <MaterialIcons
+                name="menu-book"
+                size={24}
+                color={useColorScheme() == "light" ? "black" : "white"}
+              />
             )}
             title={"CREDOS"}
           />
@@ -282,7 +294,7 @@ const Home = () => {
               <MaterialCommunityIcons
                 name="shield-cross-outline"
                 size={24}
-                color="black"
+                color={useColorScheme() == "light" ? "black" : "white"}
               />
             )}
             title={"CATECISMOS"}
@@ -298,7 +310,7 @@ const Home = () => {
               <MaterialCommunityIcons
                 name="book-cross"
                 size={24}
-                color="black"
+                color={useColorScheme() == "light" ? "black" : "white"}
               />
             )}
             title={"OUTROS"}
@@ -311,7 +323,11 @@ const Home = () => {
               navigation.navigate("Sobre");
             }}
             accessoryLeft={() => (
-              <AntDesign name="infocirlce" size={24} color="black" />
+              <AntDesign
+                name="infocirlce"
+                size={24}
+                color={useColorScheme() == "light" ? "black" : "white"}
+              />
             )}
             title={"SOBRE"}
           />
@@ -322,7 +338,13 @@ const Home = () => {
               //@ts-ignore
               navigation.navigate("Contato");
             }}
-            accessoryLeft={() => <Entypo name="mail" size={24} color="black" />}
+            accessoryLeft={() => (
+              <Entypo
+                name="mail"
+                size={24}
+                color={useColorScheme() == "light" ? "black" : "white"}
+              />
+            )}
             title={"CONTATO"}
           />
           <Divider />
@@ -333,7 +355,11 @@ const Home = () => {
               navigation.navigate("Doação");
             }}
             accessoryLeft={() => (
-              <FontAwesome5 name="hand-holding-heart" size={24} color="black" />
+              <FontAwesome5
+                name="hand-holding-heart"
+                size={24}
+                color={useColorScheme() == "light" ? "black" : "white"}
+              />
             )}
             title={"DOAÇÃO"}
           />
