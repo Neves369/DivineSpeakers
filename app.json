@@ -2,7 +2,7 @@
   "expo": {
     "name": "DivSpeak",
     "slug": "DivineSpeakers",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -21,12 +21,12 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#000000",
-        "userInterfaceStyle": "automatic"
+        "backgroundColor": "#000000"
       },
+      "userInterfaceStyle": "automatic",
       "googleServicesFile": "./google-services.json",
       "package": "com.neves369.divinespeakers",
-      "versionCode": 5,
+      "versionCode": 6,
       "permissions": [ 
         "READ_INTERNAL_STORAGE",
         "WRITE_INTERNAL_STORAGE",
