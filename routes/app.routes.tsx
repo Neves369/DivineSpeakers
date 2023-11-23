@@ -8,7 +8,6 @@ import CreedListScreen from "../screens/Creed/CreedListScreen";
 import HomeScreen from "../screens/HomeScreen";
 import Settings from "../screens/ConfigScreen";
 import Contact from "../screens/Contact";
-import * as eva from "@eva-design/eva";
 import Donate from "../screens/Donate";
 import About from "../screens/About";
 import React from "react";
@@ -16,8 +15,6 @@ import ComingSoon from "../screens/ComingSoon";
 import useColorScheme from "../hooks/useColorScheme";
 
 const AppStack = createNativeStackNavigator();
-
-console.log(eva.dark);
 
 const AppRoutes: React.FC = () => {
   return (

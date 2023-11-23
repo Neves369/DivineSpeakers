@@ -22,8 +22,6 @@ export default function App() {
     sendToken(token);
   };
 
-  console.log(useColorScheme());
-
   const sendToken = async (token: string) => {
     let enviou: any = await AsyncStorage.getItem("enviouToken");
     if (!enviou) {

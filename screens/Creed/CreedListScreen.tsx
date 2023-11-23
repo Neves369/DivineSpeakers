@@ -126,6 +126,7 @@ const CreedList = () => {
         style={styles.list}
         data={filter}
         renderItem={renderItem}
+        ItemSeparatorComponent={Divider}
         ListFooterComponent={renderFooter}
         onEndReachedThreshold={0.5}
         keyExtractor={(item) => `${item.titulo}`}
