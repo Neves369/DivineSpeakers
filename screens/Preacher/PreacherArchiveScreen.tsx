@@ -200,7 +200,7 @@ const PreacherArchive = ({ route, navigation }: any) => {
             typeof item == "string"
               ? Linking.openURL(autor.audios[item])
               : DownloadFile(item, "pdf");
-          }, 3000);
+          }, 1000);
         }}
       />
     );

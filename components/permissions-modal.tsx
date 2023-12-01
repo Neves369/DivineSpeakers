@@ -1,10 +1,10 @@
 import data from "../data.json";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
+import useColorScheme from "../hooks/useColorScheme";
 import { StyleSheet, ScrollView, View, Modal } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button, Card, CheckBox, Text } from "@ui-kitten/components";
-
 export const ModalPermission = () => {
   const [checked, setChecked] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -29,11 +29,10 @@ export const ModalPermission = () => {
 
   return (
     <Modal visible={visible} style={styles.backdrop}>
-      <StatusBar backgroundColor="white" />
-      <Card
-        disabled={true}
-        style={{ width: "100%", height: "100%", backgroundColor: "white" }}
-      >
+      <StatusBar
+        backgroundColor={useColorScheme() == "light" ? "white" : "#1A2138"}
+      />
+      <Card disabled={true} style={{ width: "100%", height: "100%" }}>
         <Text style={{ textAlign: "justify", fontWeight: "bold" }}>
           DivineSpeakers - Termos e Condições de Uso
         </Text>
