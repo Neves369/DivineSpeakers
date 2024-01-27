@@ -35,15 +35,14 @@ const interstitial = InterstitialAd.createForAdRequest(
 const PreacherArchive = ({ route, navigation }: any) => {
   const [screen, setScreen] = useState(0);
   const [audios, setAudios] = useState<any>([]);
-  const [playing, setPlaying] = useState(false);
   const [autor, setAutor] = useState(route.params);
   const [isLoading, setIsLoading] = useState(false);
   const [archives, setArchives] = useState<any>([]);
   const [videoReady, setVideoReady] = useState(false);
+  const [isReadyForRender, setIsReadyForRender] = useState(false);
   const [interstitialLoaded, setInterstitialLoaded] = useState(false);
 
   const appState = useRef(AppState.currentState);
-  const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
   useEffect(() => {
     const unsubscribeInterstitialEvents = loadInterstitial();
@@ -55,7 +54,6 @@ const PreacherArchive = ({ route, navigation }: any) => {
 
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       appState.current = nextAppState;
-      setAppStateVisible(appState.current);
     });
 
     return () => {
@@ -189,27 +187,26 @@ const PreacherArchive = ({ route, navigation }: any) => {
     };
   };
 
+  function onReady() {
+    setIsReadyForRender(true);
+    setVideoReady(true);
+  }
+
   const renderItem = useCallback(({ item, index }: any) => {
     return (
       <ArchiveItem
         style={styles.item}
         message={typeof item == "string" ? item : item.name}
         onPress={() => {
-          interstitial.show();
-          setTimeout(() => {
-            typeof item == "string"
-              ? Linking.openURL(autor.audios[item])
-              : DownloadFile(item, "pdf");
-          }, 1000);
+          // interstitial.show();
+          // setTimeout(() => {
+          typeof item == "string"
+            ? Linking.openURL(autor.audios[item])
+            : DownloadFile(item, "pdf");
+          // }, 1000);
         }}
       />
     );
-  }, []);
-
-  const onStateChange = useCallback((state: any) => {
-    if (state === "ended") {
-      setPlaying(false);
-    }
   }, []);
 
   return (
@@ -223,22 +220,21 @@ const PreacherArchive = ({ route, navigation }: any) => {
 
       {screen == 0 ? (
         <ScrollView>
-          {/* <Card style={{ margin: 7 }} disabled>
-            {appStateVisible == "active" ? (
-              <>
-                <YoutubePlayer
-                  height={videoReady ? 200 : 0}
-                  videoId={autor.video}
-                  play={playing}
-                  onReady={() => setVideoReady(true)}
-                  onChangeState={onStateChange}
-                />
-                {!videoReady && <ActivityIndicator color="red" />}
-              </>
-            ) : (
-              <></>
-            )}
-          </Card> */}
+          <Card style={{ margin: 7 }} disabled>
+            <YoutubePlayer
+              height={200}
+              videoId={autor.video}
+              onReady={() => onReady()}
+              webViewStyle={{
+                opacity: 0.99,
+                display: isReadyForRender ? "flex" : "none",
+              }}
+              webViewProps={{
+                androidLayerType: isReadyForRender ? "hardware" : "software",
+              }}
+            />
+            {!videoReady && <ActivityIndicator color="red" />}
+          </Card>
           <Card style={{ margin: 7 }}>
             <Text style={{ textAlign: "justify" }}>{autor.descricao}</Text>
           </Card>

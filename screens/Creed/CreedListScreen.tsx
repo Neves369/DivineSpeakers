@@ -12,8 +12,9 @@ import { ToastAndroid, View } from "react-native";
 import useColorScheme from "../../hooks/useColorScheme";
 import { useNavigation } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
-import React, { useState, useCallback, memo, useEffect } from "react";
 import { CatchismItem } from "../../components/catechismItem";
+import React, { useState, useCallback, memo, useEffect } from "react";
+import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
 const CreedList = () => {
   const navigation = useNavigation();
@@ -135,6 +136,10 @@ const CreedList = () => {
             getData();
           }
         }}
+      />
+      <BannerAd
+        unitId={"ca-app-pub-9187411594153289/1764293873"}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
       />
     </View>
   );

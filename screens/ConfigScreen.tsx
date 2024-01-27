@@ -22,6 +22,7 @@ import messaging from "@react-native-firebase/messaging";
 import firestore from "@react-native-firebase/firestore";
 import React, { useState, useEffect, memo } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
 const Settings = () => {
   const styles = useStyleSheet(themedStyles);
@@ -65,45 +66,46 @@ const Settings = () => {
   const clearAll = async () => {};
 
   return (
-    <Layout style={styles.container}>
-      <>
-        <TouchableOpacity activeOpacity={1.0} style={styles.option}>
-          <Text category="s2">Receber Notificações</Text>
-          <Toggle
-            checked={notification}
-            onChange={() => {
-              setNotification(!notification);
+    <>
+      <Layout style={styles.container}>
+        <>
+          <TouchableOpacity activeOpacity={1.0} style={styles.option}>
+            <Text category="s2">Receber Notificações</Text>
+            <Toggle
+              checked={notification}
+              onChange={() => {
+                setNotification(!notification);
+              }}
+            />
+          </TouchableOpacity>
+          <Divider />
+          <TouchableOpacity
+            onPress={() => Linking.openURL(data.privacidade)}
+            style={styles.option}
+          >
+            <Text category="s2">Política de Privacidade</Text>
+            <Entypo
+              name="eye-with-line"
+              size={24}
+              color="rgba(51, 102, 255, 0.3)"
+            />
+          </TouchableOpacity>
+          <Divider />
+          <TouchableOpacity
+            onPress={() => {
+              setVisible(true);
             }}
-          />
-        </TouchableOpacity>
-        <Divider />
-        <TouchableOpacity
-          onPress={() => Linking.openURL(data.privacidade)}
-          style={styles.option}
-        >
-          <Text category="s2">Política de Privacidade</Text>
-          <Entypo
-            name="eye-with-line"
-            size={24}
-            color="rgba(51, 102, 255, 0.3)"
-          />
-        </TouchableOpacity>
-        <Divider />
-        <TouchableOpacity
-          onPress={() => {
-            setVisible(true);
-          }}
-          style={styles.option}
-        >
-          <Text category="s2">Termos de uso</Text>
-          <Entypo
-            name="text-document"
-            size={24}
-            color="rgba(51, 102, 255, 0.3)"
-          />
-        </TouchableOpacity>
-        <Divider />
-        {/* <TouchableOpacity
+            style={styles.option}
+          >
+            <Text category="s2">Termos de uso</Text>
+            <Entypo
+              name="text-document"
+              size={24}
+              color="rgba(51, 102, 255, 0.3)"
+            />
+          </TouchableOpacity>
+          <Divider />
+          {/* <TouchableOpacity
           style={styles.option}
           onPress={() => {
             clearAll();
@@ -112,36 +114,41 @@ const Settings = () => {
           <Text category="s2">Limpar Cache</Text>
           <Entypo name="trash" size={24} color="rgba(255, 0, 0, 0.3)" />
         </TouchableOpacity> */}
-        <Divider />
-      </>
+          <Divider />
+        </>
 
-      <Modal visible={visible} style={styles.backdrop}>
-        <StatusBar backgroundColor="white" />
-        <Card
-          disabled={true}
-          style={{ width: "100%", height: "100%", backgroundColor: "white" }}
-        >
-          <Text style={{ textAlign: "justify", fontWeight: "bold" }}>
-            DivineSpeakers - Termos e Condições de Uso
-          </Text>
-          <View style={{ height: 20 }} />
-          <ScrollView showsVerticalScrollIndicator>
-            <Text style={{ textAlign: "justify" }}>{data.termos}</Text>
-          </ScrollView>
-          <View style={{ height: 80, justifyContent: "center" }}>
-            <View style={{ height: 10 }} />
-            <Button
-              status="warning"
-              onPress={() => {
-                setVisible(false);
-              }}
-            >
-              FECHAR
-            </Button>
-          </View>
-        </Card>
-      </Modal>
-    </Layout>
+        <Modal visible={visible} style={styles.backdrop}>
+          <StatusBar backgroundColor="white" />
+          <Card
+            disabled={true}
+            style={{ width: "100%", height: "100%", backgroundColor: "white" }}
+          >
+            <Text style={{ textAlign: "justify", fontWeight: "bold" }}>
+              DivineSpeakers - Termos e Condições de Uso
+            </Text>
+            <View style={{ height: 20 }} />
+            <ScrollView showsVerticalScrollIndicator>
+              <Text style={{ textAlign: "justify" }}>{data.termos}</Text>
+            </ScrollView>
+            <View style={{ height: 80, justifyContent: "center" }}>
+              <View style={{ height: 10 }} />
+              <Button
+                status="warning"
+                onPress={() => {
+                  setVisible(false);
+                }}
+              >
+                FECHAR
+              </Button>
+            </View>
+          </Card>
+        </Modal>
+      </Layout>
+      <BannerAd
+        unitId={"ca-app-pub-9187411594153289/1764293873"}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+      />
+    </>
   );
 };
 

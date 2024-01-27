@@ -8,8 +8,9 @@ import {
 import data from "../data.json";
 import { ToastAndroid } from "react-native";
 import React, { useState, memo } from "react";
-import Clipboard from "@react-native-clipboard/clipboard";
 import { TouchableOpacity } from "react-native";
+import Clipboard from "@react-native-clipboard/clipboard";
+import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
 const Donate = () => {
   const styles = useStyleSheet(themedStyles);
@@ -20,29 +21,35 @@ const Donate = () => {
   };
 
   return (
-    <Layout style={styles.container}>
-      <Card>
-        <Text>
-          O aplicativo Divine Speakers é e sempre será gratuito. Todo trabalho
-          foi feito e disponibilizado por um único desenvolvedor, que percebeu
-          em seu ofício uma forma de espalhar o evangelho e conservar a história
-          da igreja, contar um pouco do testemunho dos santos homens de Deus e
-          compartilhar obras que foram fundamentais para a igreja ao longo da
-          história.
-          {"\n\n"}O intuito do app é somente a glória de nosso Senhor Jesus
-          Cristo!!!
-          {"\n\n"}
-          Se este aplicativo de alguma forma abençoou ou tem abençoado sua vida,
-          e caso você sinta o desejo de abençoar a vida desse desenvolvedor,
-          você pode contribuir para o crescimento do projeto através da chave
-          pix, um cafézinho para me manter acordado enquanto trabalho neste
-          projeto já ajuda 😉
-        </Text>
-        <TouchableOpacity onPress={() => copyToClipboard(data.pix)}>
-          <Text>{`\n\n ${data.pix}`}</Text>
-        </TouchableOpacity>
-      </Card>
-    </Layout>
+    <>
+      <Layout style={styles.container}>
+        <Card>
+          <Text>
+            O aplicativo Divine Speakers é e sempre será gratuito. Todo trabalho
+            foi feito e disponibilizado por um único desenvolvedor, que percebeu
+            em seu ofício uma forma de espalhar o evangelho e conservar a
+            história da igreja, contar um pouco do testemunho dos santos homens
+            de Deus e compartilhar obras que foram fundamentais para a igreja ao
+            longo da história.
+            {"\n\n"}O intuito do app é somente a glória de nosso Senhor Jesus
+            Cristo!!!
+            {"\n\n"}
+            Se este aplicativo de alguma forma abençoou ou tem abençoado sua
+            vida, e caso você sinta o desejo de abençoar a vida desse
+            desenvolvedor, você pode contribuir para o crescimento do projeto
+            através da chave pix, um cafézinho para me manter acordado enquanto
+            trabalho neste projeto já ajuda 😉
+          </Text>
+          <TouchableOpacity onPress={() => copyToClipboard(data.pix)}>
+            <Text>{`\n\n ${data.pix}`}</Text>
+          </TouchableOpacity>
+        </Card>
+      </Layout>
+      <BannerAd
+        unitId={"ca-app-pub-9187411594153289/1764293873"}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+      />
+    </>
   );
 };
 

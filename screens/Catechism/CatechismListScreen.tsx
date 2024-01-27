@@ -9,11 +9,12 @@ import {
 } from "@ui-kitten/components";
 import { Ionicons } from "@expo/vector-icons";
 import { ToastAndroid, View } from "react-native";
+import useColorScheme from "../../hooks/useColorScheme";
 import firestore from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import { CatchismItem } from "../../components/catechismItem";
 import React, { useState, useCallback, useEffect, memo } from "react";
-import useColorScheme from "../../hooks/useColorScheme";
+import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
 const CatechismList = () => {
   const navigation = useNavigation();
@@ -139,6 +140,10 @@ const CatechismList = () => {
             getData();
           }
         }}
+      />
+      <BannerAd
+        unitId={"ca-app-pub-9187411594153289/1764293873"}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
       />
     </View>
   );

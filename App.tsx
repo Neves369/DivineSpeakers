@@ -10,7 +10,6 @@ import { ApplicationProvider } from "@ui-kitten/components";
 import { NavigationContainer } from "@react-navigation/native";
 import { ModalPermission } from "./components/permissions-modal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
 export default function App() {
   const setupFirebase = async () => {
@@ -53,11 +52,6 @@ export default function App() {
         <AuthProvider>
           <Routes />
           <ModalPermission />
-
-          <BannerAd
-            unitId={"ca-app-pub-9187411594153289/1764293873"}
-            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-          />
         </AuthProvider>
       </ApplicationProvider>
     </NavigationContainer>

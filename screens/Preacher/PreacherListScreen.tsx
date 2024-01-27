@@ -14,6 +14,7 @@ import firestore from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import { PreacherItem } from "../../components/preacherItem";
 import React, { useState, useCallback, useEffect, memo } from "react";
+import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
 const PreacherList = () => {
   const navigation = useNavigation();
@@ -143,6 +144,10 @@ const PreacherList = () => {
             getData();
           }
         }}
+      />
+      <BannerAd
+        unitId={"ca-app-pub-9187411594153289/1764293873"}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
       />
     </View>
   );

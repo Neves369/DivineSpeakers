@@ -36,6 +36,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
 import useColorScheme from "../hooks/useColorScheme";
+import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -376,6 +377,10 @@ const Home = () => {
           }}
         />
       </View>
+      <BannerAd
+        unitId={"ca-app-pub-9187411594153289/1764293873"}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+      />
     </View>
   );
 };
