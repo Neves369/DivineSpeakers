@@ -1,20 +1,19 @@
 import {
   List,
+  Text,
   Input,
   Layout,
   Spinner,
-  StyleService,
-  useStyleSheet,
   Divider,
+  useStyleSheet,
 } from "@ui-kitten/components";
 import { Ionicons } from "@expo/vector-icons";
-import { ToastAndroid, View } from "react-native";
 import useColorScheme from "../../hooks/useColorScheme";
 import firestore from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
+import { ToastAndroid, View, StyleSheet } from "react-native";
 import { CatchismItem } from "../../components/catechismItem";
 import React, { useState, useCallback, useEffect, memo } from "react";
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
 const CatechismList = () => {
   const navigation = useNavigation();
@@ -83,6 +82,31 @@ const CatechismList = () => {
     </View>
   );
 
+  const renderHeader = (): React.ReactElement => (
+    <Layout level="1" style={themedStyles.header}>
+      <Input
+        value={searchTerm}
+        style={themedStyles.input}
+        placeholder="Pesquisar"
+        accessoryRight={
+          <Ionicons
+            name="search"
+            size={24}
+            color={useColorScheme() == "light" ? "black" : "white"}
+          />
+        }
+        onChangeText={(value) => setSearchTerm(value)}
+      />
+      <Text
+        appearance="hint"
+        style={{ textAlign: "right", margin: 5, fontSize: 12 }}
+      >
+        {6} documentos
+      </Text>
+      <Divider />
+    </Layout>
+  );
+
   useEffect(() => {
     if (searchTerm.length == 0) {
       setFilter(data);
@@ -113,26 +137,12 @@ const CatechismList = () => {
         backgroundColor: useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
       }}
     >
-      <Input
-        value={searchTerm}
-        style={{ margin: 5 }}
-        placeholder="Pesquisar"
-        accessoryRight={
-          <Ionicons
-            name="search"
-            size={24}
-            color={useColorScheme() == "light" ? "black" : "white"}
-          />
-        }
-        onChangeText={(value) => setSearchTerm(value)}
-      />
-      <Divider />
       <List
         style={styles.list}
         data={filter}
         renderItem={renderItem}
-        ItemSeparatorComponent={Divider}
         ListFooterComponent={renderFooter}
+        ListHeaderComponent={renderHeader}
         onEndReachedThreshold={0.5}
         keyExtractor={(item) => `${item.titulo}`}
         onEndReached={() => {
@@ -141,28 +151,30 @@ const CatechismList = () => {
           }
         }}
       />
-      <BannerAd
-        unitId={"ca-app-pub-9187411594153289/1764293873"}
-        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-      />
     </View>
   );
 };
 
 export default memo(CatechismList);
 
-const themedStyles = StyleService.create({
+const themedStyles = StyleSheet.create({
   list: {
     flex: 1,
   },
   header: {
-    paddingHorizontal: 16,
-    paddingTop: 15,
-    paddingBottom: 8,
+    elevation: 5,
+    marginBottom: 5,
   },
   item: {
     paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "background-basic-color-1",
+    elevation: 5,
+    margin: 5,
+    borderRadius: 5,
+  },
+  input: {
+    margin: 5,
+    opacity: 0.5,
+    borderColor: "#DDD",
+    borderWidth: 1,
   },
 });

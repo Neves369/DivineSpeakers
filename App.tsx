@@ -48,9 +48,10 @@ export default function App() {
         {...eva}
         theme={useColorScheme() == "light" ? eva.light : eva.dark}
       >
-        <StatusBar translucent />
+        <StatusBar style="auto" />
         <AuthProvider>
           <Routes />
+
           <ModalPermission />
         </AuthProvider>
       </ApplicationProvider>

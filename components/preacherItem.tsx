@@ -44,6 +44,11 @@ const styles = StyleSheet.create({
     height: 40,
     marginRight: 10,
     borderRadius: 20,
+    borderWidth: 1,
+    backgroundColor: "#969696fa",
+    borderColor: "#ddd",
+    borderBottomWidth: 1,
+    borderBottomColor: "#fdf9f92f",
   },
   dateContainer: {
     flexDirection: "row",

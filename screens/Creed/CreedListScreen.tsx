@@ -1,5 +1,6 @@
 import {
   List,
+  Text,
   Input,
   Layout,
   Spinner,
@@ -8,13 +9,12 @@ import {
   Divider,
 } from "@ui-kitten/components";
 import { Ionicons } from "@expo/vector-icons";
-import { ToastAndroid, View } from "react-native";
 import useColorScheme from "../../hooks/useColorScheme";
 import { useNavigation } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
+import { ToastAndroid, View, StyleSheet } from "react-native";
 import { CatchismItem } from "../../components/catechismItem";
 import React, { useState, useCallback, memo, useEffect } from "react";
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
 const CreedList = () => {
   const navigation = useNavigation();
@@ -102,16 +102,11 @@ const CreedList = () => {
     </View>
   );
 
-  return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
-      }}
-    >
+  const renderHeader = (): React.ReactElement => (
+    <Layout level="1" style={themedStyles.header}>
       <Input
         value={searchTerm}
-        style={{ margin: 5 }}
+        style={themedStyles.input}
         placeholder="Pesquisar"
         accessoryRight={
           <Ionicons
@@ -122,13 +117,30 @@ const CreedList = () => {
         }
         onChangeText={(value) => setSearchTerm(value)}
       />
+      <Text
+        appearance="hint"
+        style={{ textAlign: "right", margin: 5, fontSize: 12 }}
+      >
+        {5} documentos
+      </Text>
       <Divider />
+    </Layout>
+  );
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
+      }}
+    >
       <List
         style={styles.list}
         data={filter}
         renderItem={renderItem}
         ItemSeparatorComponent={Divider}
         ListFooterComponent={renderFooter}
+        ListHeaderComponent={renderHeader}
         onEndReachedThreshold={0.5}
         keyExtractor={(item) => `${item.titulo}`}
         onEndReached={() => {
@@ -136,10 +148,6 @@ const CreedList = () => {
             getData();
           }
         }}
-      />
-      <BannerAd
-        unitId={"ca-app-pub-9187411594153289/1764293873"}
-        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
       />
     </View>
   );
@@ -152,13 +160,19 @@ const themedStyles = StyleService.create({
     flex: 1,
   },
   header: {
-    paddingHorizontal: 16,
-    paddingTop: 15,
-    paddingBottom: 8,
+    elevation: 5,
+    marginBottom: 5,
   },
   item: {
     paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "background-basic-color-3",
+    elevation: 5,
+    margin: 5,
+    borderRadius: 5,
+  },
+  input: {
+    margin: 5,
+    opacity: 0.5,
+    borderColor: "#DDD",
+    borderWidth: 1,
   },
 });

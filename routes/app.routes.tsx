@@ -10,7 +10,7 @@ import Settings from "../screens/ConfigScreen";
 import Contact from "../screens/Contact";
 import Donate from "../screens/Donate";
 import About from "../screens/About";
-import React from "react";
+import React, { useEffect } from "react";
 import ComingSoon from "../screens/ComingSoon";
 import useColorScheme from "../hooks/useColorScheme";
 

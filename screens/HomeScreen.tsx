@@ -36,15 +36,14 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
 import useColorScheme from "../hooks/useColorScheme";
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
 const Home = () => {
   const navigation = useNavigation();
   const [index, setIndex] = useState(0);
   const [show, setShow] = useState(false);
   const [data, setData] = useState<any>([]);
-  const { theme }: any = useContext(AuthContext);
   const [visibleMenu, setVisibleMenu] = useState(false);
+  const { theme }: any = useContext(AuthContext);
 
   const onScroll = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -377,10 +376,6 @@ const Home = () => {
           }}
         />
       </View>
-      <BannerAd
-        unitId={"ca-app-pub-9187411594153289/1764293873"}
-        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-      />
     </View>
   );
 };

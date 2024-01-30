@@ -6,11 +6,12 @@ import {
   Text,
 } from "@ui-kitten/components";
 import data from "../data.json";
+
 import { ToastAndroid } from "react-native";
-import React, { useState, memo } from "react";
 import { TouchableOpacity } from "react-native";
+
 import Clipboard from "@react-native-clipboard/clipboard";
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
+import React, { memo } from "react";
 
 const Donate = () => {
   const styles = useStyleSheet(themedStyles);
@@ -45,10 +46,6 @@ const Donate = () => {
           </TouchableOpacity>
         </Card>
       </Layout>
-      <BannerAd
-        unitId={"ca-app-pub-9187411594153289/1764293873"}
-        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-      />
     </>
   );
 };

@@ -1,20 +1,19 @@
 import {
+  Text,
   List,
   Input,
   Layout,
   Spinner,
-  StyleService,
   useStyleSheet,
   Divider,
 } from "@ui-kitten/components";
 import { Ionicons } from "@expo/vector-icons";
-import { ToastAndroid, View } from "react-native";
+import { ToastAndroid, View, StyleSheet } from "react-native";
 import useColorScheme from "../../hooks/useColorScheme";
 import firestore from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import { PreacherItem } from "../../components/preacherItem";
 import React, { useState, useCallback, useEffect, memo } from "react";
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
 const PreacherList = () => {
   const navigation = useNavigation();
@@ -25,6 +24,7 @@ const PreacherList = () => {
   const [filter, setFilter] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isListEnd, setisListEnd] = useState(false);
+  const [documentCount, setDocumentCount] = useState(0);
 
   const getData = async () => {
     if (!loading && !isListEnd) {
@@ -36,6 +36,7 @@ const PreacherList = () => {
         .limit(10)
         .get()
         .then((query: any) => {
+          console.log(query.docs.length);
           if (query.docs.length > 0) {
             let filter = query.docs.map((item: any) => item._data);
             setOffset(query.docs[query.docs.length - 1]);
@@ -56,13 +57,26 @@ const PreacherList = () => {
     }
   };
 
+  const getDocumentCount = async () => {
+    try {
+      const collectionReference = firestore().collection("autores");
+
+      const querySnapshot = await collectionReference.get();
+      const count = querySnapshot.size;
+
+      setDocumentCount(count);
+    } catch (error) {
+      console.error("Erro ao obter a contagem de documentos:", error);
+    }
+  };
+
   useEffect(() => {
     if (data.length == 0) {
       setData([]);
       setOffset(null);
       setLoading(false);
       setisListEnd(false);
-      getData();
+      Promise.all([getData(), getDocumentCount()]);
     }
   }, []);
 
@@ -111,16 +125,11 @@ const PreacherList = () => {
     </View>
   );
 
-  return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
-      }}
-    >
+  const renderHeader = (): React.ReactElement => (
+    <Layout level="1" style={themedStyles.header}>
       <Input
         value={searchTerm}
-        style={{ margin: 5 }}
+        style={themedStyles.input}
         placeholder="Pesquisar"
         accessoryRight={
           <Ionicons
@@ -131,12 +140,29 @@ const PreacherList = () => {
         }
         onChangeText={(value) => setSearchTerm(value)}
       />
+      <Text
+        appearance="hint"
+        style={{ textAlign: "right", margin: 5, fontSize: 12 }}
+      >
+        {documentCount} autores
+      </Text>
       <Divider />
+    </Layout>
+  );
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
+      }}
+    >
       <List
         style={styles.list}
         data={filter}
         renderItem={renderItem}
         ListFooterComponent={renderFooter}
+        ListHeaderComponent={renderHeader}
         onEndReachedThreshold={0.5}
         keyExtractor={(item) => `${item.ref}`}
         onEndReached={() => {
@@ -145,28 +171,30 @@ const PreacherList = () => {
           }
         }}
       />
-      <BannerAd
-        unitId={"ca-app-pub-9187411594153289/1764293873"}
-        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-      />
     </View>
   );
 };
 
 export default memo(PreacherList);
 
-const themedStyles = StyleService.create({
+const themedStyles = StyleSheet.create({
   list: {
     flex: 1,
   },
   header: {
-    paddingHorizontal: 16,
-    paddingTop: 15,
-    paddingBottom: 8,
+    elevation: 5,
+    marginBottom: 5,
   },
   item: {
     paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "background-basic-color-3",
+    elevation: 5,
+    margin: 5,
+    borderRadius: 5,
+  },
+  input: {
+    margin: 5,
+    opacity: 0.5,
+    borderColor: "#ddd",
+    borderWidth: 1,
   },
 });

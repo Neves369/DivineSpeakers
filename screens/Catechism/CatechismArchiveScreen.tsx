@@ -1,10 +1,8 @@
-import { InterstitialAd, AdEventType } from "react-native-google-mobile-ads";
 import { View, StyleSheet, ScrollView, Modal } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Layout,
   Text,
-  Button,
   Divider,
   Card,
   List,
@@ -14,13 +12,6 @@ import { Image } from "expo-image";
 import { StatusBar } from "expo-status-bar";
 import { AntDesign } from "@expo/vector-icons";
 import useColorScheme from "../../hooks/useColorScheme";
-
-const interstitial = InterstitialAd.createForAdRequest(
-  "ca-app-pub-9187411594153289/4560480625",
-  {
-    requestNonPersonalizedAdsOnly: true,
-  }
-);
 
 const CatechismArchive = ({ route, navigation }: any) => {
   const [show, setShow] = useState(false);
@@ -35,10 +26,6 @@ const CatechismArchive = ({ route, navigation }: any) => {
     let keys = Object.keys(documento.texto);
     keys = keys.sort(compareNumbers);
     setCapitulos(keys);
-    const unsubscribeInterstitialEvents = loadInterstitial();
-    return () => {
-      unsubscribeInterstitialEvents();
-    };
   }, []);
 
   const renderHeader = () => {
@@ -65,10 +52,20 @@ const CatechismArchive = ({ route, navigation }: any) => {
               width: "100%",
               position: "absolute",
               top: -20,
-              zIndex: -999,
+              zIndex: 1,
             }}
           />
         </Layout>
+        <View
+          style={{
+            backgroundColor: "#0000004d",
+            height: 250,
+            width: "100%",
+            position: "absolute",
+            top: -20,
+          }}
+        />
+        <Divider style={{ elevation: 2 }} />
       </>
     );
   };
@@ -83,29 +80,6 @@ const CatechismArchive = ({ route, navigation }: any) => {
       />
     );
   }, []);
-
-  const loadInterstitial = () => {
-    const unsubscribeLoaded = interstitial.addAdEventListener(
-      AdEventType.LOADED,
-      () => {
-        setInterstitialLoaded(true);
-      }
-    );
-
-    const unsubscribeClosed = interstitial.addAdEventListener(
-      AdEventType.CLOSED,
-      () => {
-        interstitial.load();
-      }
-    );
-
-    interstitial.load();
-
-    return () => {
-      unsubscribeClosed();
-      unsubscribeLoaded();
-    };
-  };
 
   const compareNumbers = (a: any, b: any) => {
     const numberA = a.split(" - ")[0];
@@ -145,12 +119,12 @@ const CatechismArchive = ({ route, navigation }: any) => {
     >
       {renderHeader()}
       <ScrollView>
-        <Card style={{ margin: 7 }}>
+        <Card style={{ margin: 7, elevation: 1 }}>
           <Text style={{ textAlign: "justify", letterSpacing: 0.5 }}>
             {documento.descricao}
           </Text>
         </Card>
-        <Card style={{ margin: 7 }}>
+        <Card style={{ margin: 7, elevation: 1 }}>
           <Text style={{ textAlign: "justify", fontWeight: "bold" }}>
             Capítulos
           </Text>

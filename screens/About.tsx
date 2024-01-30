@@ -7,7 +7,6 @@ import {
 } from "@ui-kitten/components";
 import data from "../data.json";
 import React, { memo } from "react";
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
 const About = () => {
   const styles = useStyleSheet(themedStyles);
@@ -35,10 +34,6 @@ const About = () => {
           </Text>
         </Card>
       </Layout>
-      <BannerAd
-        unitId={"ca-app-pub-9187411594153289/1764293873"}
-        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-      />
     </>
   );
 };

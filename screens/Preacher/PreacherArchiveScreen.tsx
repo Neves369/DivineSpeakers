@@ -15,22 +15,14 @@ import {
   List,
   Card,
   Spinner,
-  Divider,
 } from "@ui-kitten/components";
 import { Image } from "expo-image";
 import storage from "@react-native-firebase/storage";
 import YoutubePlayer from "react-native-youtube-iframe";
-import DownloadFile from "../../components/downloadFile";
-import { ArchiveItem } from "../../components/preacherArchiveItem";
-import { InterstitialAd, AdEventType } from "react-native-google-mobile-ads";
 import useColorScheme from "../../hooks/useColorScheme";
-
-const interstitial = InterstitialAd.createForAdRequest(
-  "ca-app-pub-9187411594153289/4560480625",
-  {
-    requestNonPersonalizedAdsOnly: true,
-  }
-);
+import DownloadFile from "../../components/downloadFile";
+import DividerVertical from "../../components/dividerVertical";
+import { ArchiveItem } from "../../components/preacherArchiveItem";
 
 const PreacherArchive = ({ route, navigation }: any) => {
   const [screen, setScreen] = useState(0);
@@ -40,12 +32,10 @@ const PreacherArchive = ({ route, navigation }: any) => {
   const [archives, setArchives] = useState<any>([]);
   const [videoReady, setVideoReady] = useState(false);
   const [isReadyForRender, setIsReadyForRender] = useState(false);
-  const [interstitialLoaded, setInterstitialLoaded] = useState(false);
 
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
-    const unsubscribeInterstitialEvents = loadInterstitial();
     if (screen == 1 || screen == 2) {
       if (archives.length == 0 && audios.length == 0) {
         listDocumentsInFolder(`/${autor.ref}`);
@@ -57,7 +47,6 @@ const PreacherArchive = ({ route, navigation }: any) => {
     });
 
     return () => {
-      unsubscribeInterstitialEvents();
       subscription.remove();
     };
   }, [screen]);
@@ -116,7 +105,10 @@ const PreacherArchive = ({ route, navigation }: any) => {
             <View style={styles.profileSocialsContainer}></View>
           </View>
         </Layout>
-        <Layout level="1" style={{ height: 50, flexDirection: "row" }}>
+        <Layout
+          level="1"
+          style={{ height: 50, flexDirection: "row", elevation: 5 }}
+        >
           <Button
             onPress={() => {
               setScreen(0);
@@ -127,6 +119,7 @@ const PreacherArchive = ({ route, navigation }: any) => {
           >
             Resumo
           </Button>
+          <DividerVertical />
           <Button
             onPress={() => {
               setScreen(1);
@@ -137,6 +130,7 @@ const PreacherArchive = ({ route, navigation }: any) => {
           >
             Arquivos
           </Button>
+          <DividerVertical />
           <Button
             onPress={() => {
               setScreen(2);
@@ -160,31 +154,17 @@ const PreacherArchive = ({ route, navigation }: any) => {
             zIndex: -999,
           }}
         />
+        <View
+          style={{
+            backgroundColor: "#0000004d",
+            height: 250,
+            width: "100%",
+            position: "absolute",
+            top: -20,
+          }}
+        />
       </>
     );
-  };
-
-  const loadInterstitial = () => {
-    const unsubscribeLoaded = interstitial.addAdEventListener(
-      AdEventType.LOADED,
-      () => {
-        setInterstitialLoaded(true);
-      }
-    );
-
-    const unsubscribeClosed = interstitial.addAdEventListener(
-      AdEventType.CLOSED,
-      () => {
-        interstitial.load();
-      }
-    );
-
-    interstitial.load();
-
-    return () => {
-      unsubscribeClosed();
-      unsubscribeLoaded();
-    };
   };
 
   function onReady() {
@@ -220,22 +200,26 @@ const PreacherArchive = ({ route, navigation }: any) => {
 
       {screen == 0 ? (
         <ScrollView>
-          <Card style={{ margin: 7 }} disabled>
-            <YoutubePlayer
-              height={200}
-              videoId={autor.video}
-              onReady={() => onReady()}
-              webViewStyle={{
-                opacity: 0.99,
-                display: isReadyForRender ? "flex" : "none",
-              }}
-              webViewProps={{
-                androidLayerType: isReadyForRender ? "hardware" : "software",
-              }}
-            />
-            {!videoReady && <ActivityIndicator color="red" />}
-          </Card>
-          <Card style={{ margin: 7 }}>
+          {autor.video !== "" ? (
+            <Card style={{ margin: 7, elevation: 1 }} disabled>
+              <YoutubePlayer
+                height={200}
+                videoId={autor.video}
+                onReady={() => onReady()}
+                webViewStyle={{
+                  opacity: 0.99,
+                  display: isReadyForRender ? "flex" : "none",
+                }}
+                webViewProps={{
+                  androidLayerType: isReadyForRender ? "hardware" : "software",
+                }}
+              />
+              {!videoReady && <ActivityIndicator color="red" />}
+            </Card>
+          ) : (
+            ""
+          )}
+          <Card style={{ margin: 7, elevation: 1 }}>
             <Text style={{ textAlign: "justify" }}>{autor.descricao}</Text>
           </Card>
         </ScrollView>
@@ -244,7 +228,6 @@ const PreacherArchive = ({ route, navigation }: any) => {
           style={styles.list}
           data={archives}
           renderItem={renderItem}
-          ItemSeparatorComponent={Divider}
           ListEmptyComponent={
             <View
               style={{
@@ -268,7 +251,6 @@ const PreacherArchive = ({ route, navigation }: any) => {
         <List
           style={styles.list}
           data={audios}
-          ItemSeparatorComponent={Divider}
           renderItem={renderItem}
           ListEmptyComponent={
             <View
@@ -357,5 +339,8 @@ const styles = StyleSheet.create({
   },
   item: {
     paddingVertical: 16,
+    elevation: 1,
+    margin: 5,
+    borderRadius: 5,
   },
 });

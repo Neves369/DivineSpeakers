@@ -17,12 +17,10 @@ import {
   Linking,
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
-import { StatusBar } from "expo-status-bar";
 import messaging from "@react-native-firebase/messaging";
 import firestore from "@react-native-firebase/firestore";
 import React, { useState, useEffect, memo } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
 const Settings = () => {
   const styles = useStyleSheet(themedStyles);
@@ -118,7 +116,6 @@ const Settings = () => {
         </>
 
         <Modal visible={visible} style={styles.backdrop}>
-          <StatusBar backgroundColor="white" />
           <Card
             disabled={true}
             style={{ width: "100%", height: "100%", backgroundColor: "white" }}
@@ -144,10 +141,6 @@ const Settings = () => {
           </Card>
         </Modal>
       </Layout>
-      <BannerAd
-        unitId={"ca-app-pub-9187411594153289/1764293873"}
-        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-      />
     </>
   );
 };

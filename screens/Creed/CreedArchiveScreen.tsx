@@ -1,4 +1,3 @@
-import { InterstitialAd, AdEventType } from "react-native-google-mobile-ads";
 import { View, StyleSheet, ScrollView, Modal } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import {
@@ -15,13 +14,6 @@ import { StatusBar } from "expo-status-bar";
 import { AntDesign } from "@expo/vector-icons";
 import useColorScheme from "../../hooks/useColorScheme";
 
-const interstitial = InterstitialAd.createForAdRequest(
-  "ca-app-pub-9187411594153289/4560480625",
-  {
-    requestNonPersonalizedAdsOnly: true,
-  }
-);
-
 const CreedArchive = ({ route, navigation }: any) => {
   const [show, setShow] = useState(false);
   const [titulo, setTitulo] = useState("");
@@ -30,12 +22,7 @@ const CreedArchive = ({ route, navigation }: any) => {
   const [textoSelecionado, setTextoSelecionado] = useState("");
   const [interstitialLoaded, setInterstitialLoaded] = useState(false);
 
-  useEffect(() => {
-    const unsubscribeInterstitialEvents = loadInterstitial();
-    return () => {
-      unsubscribeInterstitialEvents();
-    };
-  }, []);
+  useEffect(() => {}, []);
 
   const renderHeader = () => {
     return (
@@ -65,31 +52,18 @@ const CreedArchive = ({ route, navigation }: any) => {
             }}
           />
         </Layout>
+        <View
+          style={{
+            backgroundColor: "#0000004d",
+            height: 250,
+            width: "100%",
+            position: "absolute",
+            top: -20,
+          }}
+        />
+        <Divider style={{ elevation: 2 }} />
       </>
     );
-  };
-
-  const loadInterstitial = () => {
-    const unsubscribeLoaded = interstitial.addAdEventListener(
-      AdEventType.LOADED,
-      () => {
-        setInterstitialLoaded(true);
-      }
-    );
-
-    const unsubscribeClosed = interstitial.addAdEventListener(
-      AdEventType.CLOSED,
-      () => {
-        interstitial.load();
-      }
-    );
-
-    interstitial.load();
-
-    return () => {
-      unsubscribeClosed();
-      unsubscribeLoaded();
-    };
   };
 
   const changeFont = (item: any) => {
@@ -111,12 +85,12 @@ const CreedArchive = ({ route, navigation }: any) => {
     >
       {renderHeader()}
       <ScrollView>
-        <Card style={{ margin: 7 }}>
+        <Card style={{ margin: 7, elevation: 1 }}>
           <Text style={{ textAlign: "justify", letterSpacing: 0.5 }}>
             {documento.descricao}
           </Text>
         </Card>
-        <Card style={{ margin: 7 }}>
+        <Card style={{ margin: 7, elevation: 1 }}>
           <Text style={{ textAlign: "justify", fontWeight: "bold" }}>
             Texto
           </Text>

@@ -8,7 +8,6 @@ import {
 import data from "../data.json";
 import React, { useState, memo } from "react";
 import { Linking, TouchableOpacity } from "react-native";
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
 const Contact = () => {
   const styles = useStyleSheet(themedStyles);
@@ -31,11 +30,6 @@ const Contact = () => {
           </TouchableOpacity>
         </Card>
       </Layout>
-
-      <BannerAd
-        unitId={"ca-app-pub-9187411594153289/1764293873"}
-        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-      />
     </>
   );
 };
