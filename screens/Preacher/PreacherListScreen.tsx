@@ -14,6 +14,7 @@ import firestore from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import { PreacherItem } from "../../components/preacherItem";
 import React, { useState, useCallback, useEffect, memo } from "react";
+import Ads from "../../components/Ads";
 
 const PreacherList = () => {
   const navigation = useNavigation();
@@ -171,6 +172,7 @@ const PreacherList = () => {
           }
         }}
       />
+      <Ads />
     </View>
   );
 };

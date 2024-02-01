@@ -7,6 +7,7 @@ import {
 } from "@ui-kitten/components";
 import data from "../data.json";
 import React, { memo } from "react";
+import Ads from "../components/Ads";
 
 const About = () => {
   const styles = useStyleSheet(themedStyles);
@@ -34,6 +35,7 @@ const About = () => {
           </Text>
         </Card>
       </Layout>
+      <Ads />
     </>
   );
 };

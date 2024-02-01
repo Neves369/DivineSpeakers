@@ -6,6 +6,7 @@ import {
   Text,
 } from "@ui-kitten/components";
 import React, { memo } from "react";
+import Ads from "../components/Ads";
 
 const ComingSoon = () => {
   const styles = useStyleSheet(themedStyles);
@@ -24,6 +25,7 @@ const ComingSoon = () => {
           </Text>
         </Card>
       </Layout>
+      <Ads />
     </>
   );
 };

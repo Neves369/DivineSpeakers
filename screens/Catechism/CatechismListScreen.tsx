@@ -14,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import { ToastAndroid, View, StyleSheet } from "react-native";
 import { CatchismItem } from "../../components/catechismItem";
 import React, { useState, useCallback, useEffect, memo } from "react";
+import Ads from "../../components/Ads";
 
 const CatechismList = () => {
   const navigation = useNavigation();
@@ -151,6 +152,7 @@ const CatechismList = () => {
           }
         }}
       />
+      <Ads />
     </View>
   );
 };

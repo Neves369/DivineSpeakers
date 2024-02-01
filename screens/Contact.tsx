@@ -8,6 +8,7 @@ import {
 import data from "../data.json";
 import React, { useState, memo } from "react";
 import { Linking, TouchableOpacity } from "react-native";
+import Ads from "../components/Ads";
 
 const Contact = () => {
   const styles = useStyleSheet(themedStyles);
@@ -30,6 +31,7 @@ const Contact = () => {
           </TouchableOpacity>
         </Card>
       </Layout>
+      <Ads />
     </>
   );
 };

@@ -21,6 +21,7 @@ import messaging from "@react-native-firebase/messaging";
 import firestore from "@react-native-firebase/firestore";
 import React, { useState, useEffect, memo } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Ads from "../components/Ads";
 
 const Settings = () => {
   const styles = useStyleSheet(themedStyles);
@@ -141,6 +142,7 @@ const Settings = () => {
           </Card>
         </Modal>
       </Layout>
+      <Ads />
     </>
   );
 };

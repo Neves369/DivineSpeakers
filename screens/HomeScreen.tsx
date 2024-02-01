@@ -36,6 +36,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
 import useColorScheme from "../hooks/useColorScheme";
+import Ads from "../components/Ads";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -376,6 +377,7 @@ const Home = () => {
           }}
         />
       </View>
+      <Ads />
     </View>
   );
 };

@@ -1,6 +1,6 @@
-import React, { memo } from "react";
+import React, { memo, useMemo } from "react";
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
-const ads: React.FC = () => {
+const Ads: any = () => {
   return (
     <BannerAd
       unitId={"ca-app-pub-9187411594153289/1764293873"}
@@ -9,4 +9,4 @@ const ads: React.FC = () => {
   );
 };
 
-export default memo(ads);
+export default memo(Ads);

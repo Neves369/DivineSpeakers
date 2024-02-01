@@ -15,6 +15,7 @@ import firestore from "@react-native-firebase/firestore";
 import { ToastAndroid, View, StyleSheet } from "react-native";
 import { CatchismItem } from "../../components/catechismItem";
 import React, { useState, useCallback, memo, useEffect } from "react";
+import Ads from "../../components/Ads";
 
 const CreedList = () => {
   const navigation = useNavigation();
@@ -149,6 +150,7 @@ const CreedList = () => {
           }
         }}
       />
+      <Ads />
     </View>
   );
 };

@@ -12,6 +12,7 @@ import { TouchableOpacity } from "react-native";
 
 import Clipboard from "@react-native-clipboard/clipboard";
 import React, { memo } from "react";
+import Ads from "../components/Ads";
 
 const Donate = () => {
   const styles = useStyleSheet(themedStyles);
@@ -46,6 +47,7 @@ const Donate = () => {
           </TouchableOpacity>
         </Card>
       </Layout>
+      <Ads />
     </>
   );
 };
