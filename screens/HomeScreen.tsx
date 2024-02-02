@@ -1,60 +1,22 @@
-import React, {
-  memo,
-  useCallback,
-  useEffect,
-  useState,
-  useContext,
-} from "react";
 import {
   View,
-  FlatList,
+  ScrollView,
   StyleSheet,
-  Dimensions,
+  ImageBackground,
   TouchableOpacity,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
 } from "react-native";
-import { Image } from "expo-image";
 import AuthContext from "../context/auth";
-const { width } = Dimensions.get("screen");
-import {
-  Divider,
-  MenuItem,
-  OverflowMenu,
-  Spinner,
-  Text,
-} from "@ui-kitten/components";
-import {
-  AntDesign,
-  Entypo,
-  Ionicons,
-  Fontisto,
-  FontAwesome5,
-  MaterialIcons,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
+import MyCarousel from "../components/Carousel";
 import { useNavigation } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
-import useColorScheme from "../hooks/useColorScheme";
-import Ads from "../components/Ads";
+import { Divider, Layout, Spinner, Text } from "@ui-kitten/components";
+import React, { useContext, useEffect, useState } from "react";
 
-const Home = () => {
+const CatechismArchive = () => {
   const navigation = useNavigation();
-  const [index, setIndex] = useState(0);
   const [show, setShow] = useState(false);
   const [data, setData] = useState<any>([]);
-  const [visibleMenu, setVisibleMenu] = useState(false);
   const { theme }: any = useContext(AuthContext);
-
-  const onScroll = useCallback(
-    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const slideSize = event.nativeEvent.layoutMeasurement.width;
-      const index = event.nativeEvent.contentOffset.x / slideSize;
-      const roundIndex = Math.round(index);
-      setIndex(roundIndex);
-    },
-    []
-  );
 
   const getData = async () => {
     firestore()
@@ -74,116 +36,15 @@ const Home = () => {
       });
   };
 
-  const renderCarousel = (data: any) => {
-    const renderItem = useCallback(({ item, index }: any) => {
-      return (
-        <TouchableOpacity
-          key={`item-${index}`}
-          style={{
-            justifyContent: "flex-end",
-          }}
-          onPress={() => {
-            //@ts-ignore
-            navigation.navigate("Arquivos", item);
-          }}
-          disabled={index == 0 ? true : false}
-        >
-          <View
-            style={{
-              width,
-              height: 300,
-              alignItems: "flex-start",
-              justifyContent: "flex-start",
-              backgroundColor: "rgba(0,0,0, 0)",
-              paddingHorizontal: 24,
-              paddingBottom: 0,
-            }}
-          >
-            <Text category="h1" status="control">
-              {item.nome}
-            </Text>
-            <Text category="h6" status="control" style={{ color: "gray" }}>
-              {item.titulo}
-            </Text>
-            <Text
-              style={{ marginTop: 25, textAlign: "justify" }}
-              category="s2"
-              status="control"
-            >
-              {item.descricao}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      );
-    }, []);
+  useEffect(() => {
+    if (data.length == 0 && theme) {
+      getData();
+    }
+  }, [theme]);
 
+  const renderHeader = (data: any) => {
     if (show) {
-      return (
-        <>
-          <View style={[StyleSheet.absoluteFillObject]}>
-            <Image
-              key={`image-${index}`}
-              cachePolicy={"disk"}
-              source={{
-                uri: data[index].foto,
-              }}
-              style={[
-                StyleSheet.absoluteFillObject,
-                { opacity: 1, backgroundColor: "black" },
-              ]}
-              blurRadius={0}
-            />
-          </View>
-          <FlatList
-            data={data}
-            onScroll={onScroll}
-            style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-            keyExtractor={(_, index) => index.toString()}
-            renderItem={renderItem}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-          />
-          <View
-            style={{
-              height: 50,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingHorizontal: 25,
-              alignItems: "center",
-              backgroundColor: "rgba(0,0,0,0.5)",
-            }}
-          >
-            <View
-              style={{
-                backgroundColor: "transparent",
-                height: 5,
-                width: "100%",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              {data?.map((item: any, indx: any) => {
-                return (
-                  <View
-                    key={`dot-${indx}`}
-                    style={{
-                      width: indx == index ? 15 : 10,
-                      height: indx == index ? 15 : 10,
-                      borderRadius: 15,
-                      backgroundColor:
-                        indx == index
-                          ? "rgba(255, 255, 255, 0.3)"
-                          : "rgba(255, 255, 255, 0.1)",
-                    }}
-                  />
-                );
-              })}
-            </View>
-          </View>
-        </>
-      );
+      return <MyCarousel navigation={navigation} data={data} />;
     } else {
       return (
         <View
@@ -198,197 +59,201 @@ const Home = () => {
     }
   };
 
-  const renderToggleButton = (): React.ReactElement => (
-    <Entypo
-      name="menu"
-      size={30}
-      color="white"
-      style={{ position: "absolute", left: 8 }}
-      onPress={() => {
-        //@ts-ignore
-        setVisibleMenu(true);
-      }}
-    />
-  );
-
-  useEffect(() => {
-    if (data.length == 0 && theme) {
-      getData();
-    }
-  }, [theme]);
-
   return (
-    <View style={styles.container}>
-      {renderCarousel(data)}
-      <View
-        style={{
-          flexDirection: "row",
-          height: 50,
-          width: "100%",
-          position: "absolute",
-          top: 50,
-          alignItems: "center",
-          paddingLeft: 12,
-        }}
-      >
-        <OverflowMenu
-          anchor={renderToggleButton}
-          visible={visibleMenu}
-          style={{ maxHeight: 420, width: 200 }}
-          onBackdropPress={() => setVisibleMenu(false)}
-        >
-          <MenuItem
-            onPress={() => {
-              setVisibleMenu(false);
-              //@ts-ignore
-              navigation.navigate("Pregadores");
-            }}
-            accessoryLeft={() => (
-              <Fontisto
-                name="person"
-                size={24}
-                color={useColorScheme() == "light" ? "black" : "white"}
-              />
-            )}
-            title={"PREGADORES"}
-          />
-          <Divider />
-          <MenuItem
-            onPress={() => {
-              setVisibleMenu(false);
-              //@ts-ignore
-              navigation.navigate("Em breve");
-            }}
-            accessoryLeft={() => (
-              <FontAwesome5
-                name="book-reader"
-                size={24}
-                color={useColorScheme() == "light" ? "black" : "white"}
-              />
-            )}
-            title={"CONFSSÕES DE FÉ"}
-          />
-          <Divider />
-          <MenuItem
-            onPress={() => {
-              setVisibleMenu(false);
-              //@ts-ignore
-              navigation.navigate("Credos");
-            }}
-            accessoryLeft={() => (
-              <MaterialIcons
-                name="menu-book"
-                size={24}
-                color={useColorScheme() == "light" ? "black" : "white"}
-              />
-            )}
-            title={"CREDOS"}
-          />
-          <Divider />
-          <MenuItem
-            onPress={() => {
-              setVisibleMenu(false);
-              //@ts-ignore
-              navigation.navigate("Catecismos");
-            }}
-            accessoryLeft={() => (
-              <MaterialCommunityIcons
-                name="shield-cross-outline"
-                size={24}
-                color={useColorScheme() == "light" ? "black" : "white"}
-              />
-            )}
-            title={"CATECISMOS"}
-          />
-          <Divider />
-          <MenuItem
-            onPress={() => {
-              setVisibleMenu(false);
-              //@ts-ignore
-              navigation.navigate("Em breve");
-            }}
-            accessoryLeft={() => (
-              <MaterialCommunityIcons
-                name="book-cross"
-                size={24}
-                color={useColorScheme() == "light" ? "black" : "white"}
-              />
-            )}
-            title={"OUTROS"}
-          />
-          <Divider />
-          <MenuItem
-            onPress={() => {
-              setVisibleMenu(false);
-              //@ts-ignore
-              navigation.navigate("Sobre");
-            }}
-            accessoryLeft={() => (
-              <AntDesign
-                name="infocirlce"
-                size={24}
-                color={useColorScheme() == "light" ? "black" : "white"}
-              />
-            )}
-            title={"SOBRE"}
-          />
-          <Divider />
-          <MenuItem
-            onPress={() => {
-              setVisibleMenu(false);
-              //@ts-ignore
-              navigation.navigate("Contato");
-            }}
-            accessoryLeft={() => (
-              <Entypo
-                name="mail"
-                size={24}
-                color={useColorScheme() == "light" ? "black" : "white"}
-              />
-            )}
-            title={"CONTATO"}
-          />
-          <Divider />
-          <MenuItem
-            onPress={() => {
-              setVisibleMenu(false);
-              //@ts-ignore
-              navigation.navigate("Doação");
-            }}
-            accessoryLeft={() => (
-              <FontAwesome5
-                name="hand-holding-heart"
-                size={24}
-                color={useColorScheme() == "light" ? "black" : "white"}
-              />
-            )}
-            title={"DOAÇÃO"}
-          />
-        </OverflowMenu>
-
-        <Ionicons
-          name="settings-sharp"
-          size={30}
-          color="white"
-          style={{ position: "absolute", right: 25, top: 25 }}
+    <Layout style={{ flex: 1 }}>
+      <Layout style={{ flex: 1 }}>{renderHeader(data)}</Layout>
+      <Divider />
+      <ScrollView style={styles.list}>
+        <TouchableOpacity
+          style={styles.item}
+          activeOpacity={0.95}
           onPress={() => {
             //@ts-ignore
-            navigation.navigate("Configurações");
+            navigation.navigate("Pregadores");
           }}
-        />
-      </View>
-      <Ads />
-    </View>
+        >
+          <ImageBackground
+            style={styles.itemSection}
+            resizeMode="center"
+            imageStyle={{ borderRadius: 3 }}
+            source={require("../assets/pregador.webp")}
+          />
+          <View style={styles.itemSection}>
+            <Text style={styles.itemTitle} category="h5">
+              PREGADORES
+            </Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.item, styles.itemReverse]}
+          activeOpacity={0.95}
+          onPress={() => {
+            //@ts-ignore
+            navigation.navigate("Em breve");
+          }}
+        >
+          <ImageBackground
+            style={styles.itemSection}
+            resizeMode="stretch"
+            imageStyle={{ borderRadius: 3 }}
+            source={require("../assets/confissao.webp")}
+          />
+          <View style={styles.itemSection}>
+            <Text style={styles.itemTitle} category="h5">
+              CONFISSÕES DE FÉ
+            </Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.item}
+          activeOpacity={0.95}
+          onPress={() => {
+            //@ts-ignore
+            navigation.navigate("Credos");
+          }}
+        >
+          <ImageBackground
+            style={styles.itemSection}
+            imageStyle={{ borderRadius: 3 }}
+            source={require("../assets/credo.jpg")}
+          />
+          <View style={styles.itemSection}>
+            <Text style={styles.itemTitle} category="h5">
+              CREDOS
+            </Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.item, styles.itemReverse]}
+          activeOpacity={0.95}
+          onPress={() => {
+            //@ts-ignore
+            navigation.navigate("Catecismos");
+          }}
+        >
+          <ImageBackground
+            style={styles.itemSection}
+            imageStyle={{ borderRadius: 3 }}
+            source={require("../assets/catecismo.jpg")}
+          />
+          <View style={styles.itemSection}>
+            <Text style={styles.itemTitle} category="h5">
+              CATECISMOS
+            </Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.item}
+          activeOpacity={0.95}
+          onPress={() => {
+            //@ts-ignore
+            navigation.navigate("Em breve");
+          }}
+        >
+          <ImageBackground
+            style={styles.itemSection}
+            resizeMode="stretch"
+            imageStyle={{ borderRadius: 3 }}
+            source={require("../assets/outros.webp")}
+          />
+          <View style={styles.itemSection}>
+            <Text style={styles.itemTitle} category="h5">
+              OUTROS
+            </Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.item, styles.itemReverse]}
+          activeOpacity={0.95}
+          onPress={() => {
+            //@ts-ignore
+            navigation.navigate("Sobre");
+          }}
+        >
+          <ImageBackground
+            style={styles.itemSection}
+            imageStyle={{ borderRadius: 3 }}
+            source={require("../assets/sobre.jpg")}
+          />
+          <View style={styles.itemSection}>
+            <Text style={styles.itemTitle} category="h5">
+              SOBRE
+            </Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.item}
+          activeOpacity={0.95}
+          onPress={() => {
+            //@ts-ignore
+            navigation.navigate("Contato");
+          }}
+        >
+          <ImageBackground
+            style={styles.itemSection}
+            imageStyle={{ borderRadius: 3 }}
+            source={require("../assets/contato.jpg")}
+          />
+          <View style={styles.itemSection}>
+            <Text style={styles.itemTitle} category="h5">
+              CONTATO
+            </Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.item, styles.itemReverse]}
+          activeOpacity={0.95}
+          onPress={() => {
+            //@ts-ignore
+            navigation.navigate("Doação");
+          }}
+        >
+          <ImageBackground
+            style={styles.itemSection}
+            imageStyle={{ borderRadius: 3 }}
+            source={require("../assets/doacao.webp")}
+          />
+          <View style={styles.itemSection}>
+            <Text style={styles.itemTitle} category="h5">
+              DOAÇÃO
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </ScrollView>
+    </Layout>
   );
 };
 
-export default memo(Home);
+export default CatechismArchive;
 
 const styles = StyleSheet.create({
-  container: {
+  list: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignContent: "center",
-    justifyContent: "center",
+    marginHorizontal: "3%",
+  },
+  item: {
+    minHeight: 100,
+    flexDirection: "row",
+  },
+  itemReverse: {
+    flexDirection: "row-reverse",
+  },
+  itemSection: {
+    flex: 1,
+    padding: 16,
+  },
+  itemTitle: {
+    flex: 1,
+    fontSize: 16,
+  },
+  iconButton: {
+    paddingHorizontal: 0,
   },
 });

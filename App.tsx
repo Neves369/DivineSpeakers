@@ -51,7 +51,6 @@ export default function App() {
         <StatusBar style="auto" />
         <AuthProvider>
           <Routes />
-
           <ModalPermission />
         </AuthProvider>
       </ApplicationProvider>

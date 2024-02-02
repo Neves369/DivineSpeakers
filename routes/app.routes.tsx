@@ -5,24 +5,44 @@ import CatechismListScreen from "../screens/Catechism/CatechismListScreen";
 import PreacherListScreen from "../screens/Preacher/PreacherListScreen";
 import CreedArchiveScreen from "../screens/Creed/CreedArchiveScreen";
 import CreedListScreen from "../screens/Creed/CreedListScreen";
-// import HomeScreen from "../screens/HomeScreen";
-import HomeScreen from "../screens/teste";
+import HomeScreen from "../screens/HomeScreen";
 import Settings from "../screens/ConfigScreen";
 import Contact from "../screens/Contact";
 import Donate from "../screens/Donate";
 import About from "../screens/About";
-import React, { useEffect } from "react";
+import React from "react";
+import { Ionicons } from "@expo/vector-icons";
 import ComingSoon from "../screens/ComingSoon";
 import useColorScheme from "../hooks/useColorScheme";
+import { useNavigation } from "@react-navigation/native";
 
 const AppStack = createNativeStackNavigator();
 
 const AppRoutes: React.FC = () => {
+  const navigation = useNavigation();
   return (
     <AppStack.Navigator>
       <AppStack.Screen
         name="Dashboard"
-        options={{ headerShown: false }}
+        options={{
+          headerTitle: "Divine Speakers",
+          headerStyle: {
+            backgroundColor:
+              useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
+          },
+          headerTintColor: useColorScheme() == "light" ? "black" : "white",
+          headerRight: () => (
+            <Ionicons
+              name="settings-sharp"
+              size={30}
+              color={useColorScheme() == "light" ? "black" : "white"}
+              onPress={() => {
+                //@ts-ignore
+                navigation.navigate("Configurações");
+              }}
+            />
+          ),
+        }}
         component={HomeScreen}
       />
       <AppStack.Screen
