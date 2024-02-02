@@ -2,7 +2,7 @@
   "expo": {
     "name": "DivSpeak",
     "slug": "DivineSpeakers",
-    "version": "1.0.10",
+    "version": "1.0.11",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -26,7 +26,7 @@
       "userInterfaceStyle": "automatic",
       "googleServicesFile": "./google-services.json",
       "package": "com.neves369.divinespeakers",
-      "versionCode": 10,
+      "versionCode": 11,
       "permissions": [ 
         "READ_INTERNAL_STORAGE",
         "WRITE_INTERNAL_STORAGE",

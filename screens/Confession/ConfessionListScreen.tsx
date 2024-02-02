@@ -16,7 +16,7 @@ import { CatchismItem } from "../../components/catechismItem";
 import React, { useState, useCallback, useEffect, memo } from "react";
 import Ads from "../../components/Ads";
 
-const CatechismList = () => {
+const ConfissionList = () => {
   const navigation = useNavigation();
   const [offset, setOffset] = useState(null);
   const styles = useStyleSheet(themedStyles);
@@ -30,7 +30,7 @@ const CatechismList = () => {
     if (!loading && !isListEnd) {
       setLoading(true);
       firestore()
-        .collection("catecismos")
+        .collection("confissoes")
         .orderBy("titulo")
         .startAfter(offset)
         .limit(10)
@@ -64,7 +64,7 @@ const CatechismList = () => {
         message={item}
         onPress={() => {
           //@ts-ignore
-          navigation.navigate("Catecismo", item);
+          navigation.navigate("Confissão", item);
         }}
       />
     );
@@ -102,7 +102,7 @@ const CatechismList = () => {
         appearance="hint"
         style={{ textAlign: "right", margin: 5, fontSize: 12 }}
       >
-        {data.length} documentos
+        {data.length} Documentos
       </Text>
       <Divider />
     </Layout>
@@ -113,18 +113,18 @@ const CatechismList = () => {
       setFilter(data);
     } else {
       const resposta: any = [];
-      data.map((credo) => {
+      data.map((conf) => {
         if (
-          credo?.titulo
+          conf?.titulo
             ?.toLowerCase()
             .normalize()
             .indexOf(searchTerm.toLowerCase().normalize(), 0) >= 0 ||
-          credo?.autor
+          conf?.autor
             ?.toLowerCase()
             .normalize()
             .indexOf(searchTerm.toLowerCase().normalize(), 0) >= 0
         ) {
-          resposta.push(credo);
+          resposta.push(conf);
         }
       });
       setFilter(resposta);
@@ -157,7 +157,7 @@ const CatechismList = () => {
   );
 };
 
-export default memo(CatechismList);
+export default memo(ConfissionList);
 
 const themedStyles = StyleSheet.create({
   list: {

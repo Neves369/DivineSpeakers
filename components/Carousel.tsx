@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React, { useState, useCallback, useRef, memo } from "react";
+import React, { useState, useCallback, useRef, useMemo, memo } from "react";
 import {
   StyleSheet,
   Dimensions,
@@ -24,6 +24,7 @@ interface RenderItemProps {
 
 const CustomCarousel: any = (param: Array<any>) => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
+  const data = useMemo(() => param.data, []);
   const ref = useRef(null);
 
   const renderItem = useCallback(({ item, index }: RenderItemProps) => {
@@ -59,7 +60,7 @@ const CustomCarousel: any = (param: Array<any>) => {
     );
   }, []);
 
-  if (param.data) {
+  if (data) {
     return (
       <View style={{ flex: 1 }}>
         <Carousel
@@ -67,7 +68,7 @@ const CustomCarousel: any = (param: Array<any>) => {
           autoplay
           ref={ref}
           layout={"tinder"}
-          data={param.data}
+          data={data}
           itemWidth={width}
           sliderWidth={width}
           itemHeight={height}
@@ -79,7 +80,7 @@ const CustomCarousel: any = (param: Array<any>) => {
         />
 
         <Pagination
-          dotsLength={param.data.length}
+          dotsLength={data.length}
           activeDotIndex={activeIndex}
           carouselRef={ref}
           containerStyle={styles.paginationContainer}

@@ -13,6 +13,7 @@ import { Image } from "expo-image";
 import { StatusBar } from "expo-status-bar";
 import { AntDesign } from "@expo/vector-icons";
 import useColorScheme from "../../hooks/useColorScheme";
+import Ads from "../../components/Ads";
 
 const CreedArchive = ({ route, navigation }: any) => {
   const [show, setShow] = useState(false);
@@ -160,6 +161,7 @@ const CreedArchive = ({ route, navigation }: any) => {
           </View>
         </Card>
       </Modal>
+      <Ads />
     </View>
   );
 };

@@ -1,4 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import ConfessionListScreen from "../screens/Confession/ConfessionListScreen";
+import ConfessionArchiveScreen from "../screens/Confession/ConfessionArchiveScreen";
 import CatechismArchiveScreen from "../screens/Catechism/CatechismArchiveScreen";
 import PreacherArchiveScreen from "../screens/Preacher/PreacherArchiveScreen";
 import CatechismListScreen from "../screens/Catechism/CatechismListScreen";
@@ -48,6 +50,17 @@ const AppRoutes: React.FC = () => {
       <AppStack.Screen
         name="Pregadores"
         component={PreacherListScreen}
+        options={{
+          headerStyle: {
+            backgroundColor:
+              useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
+          },
+          headerTintColor: useColorScheme() == "light" ? "black" : "white",
+        }}
+      />
+      <AppStack.Screen
+        name="Confissões"
+        component={ConfessionListScreen}
         options={{
           headerStyle: {
             backgroundColor:
@@ -137,6 +150,11 @@ const AppRoutes: React.FC = () => {
       <AppStack.Screen
         name="Arquivos"
         component={PreacherArchiveScreen}
+        options={{ headerTransparent: true, headerTintColor: "white" }}
+      />
+      <AppStack.Screen
+        name="Confissão"
+        component={ConfessionArchiveScreen}
         options={{ headerTransparent: true, headerTintColor: "white" }}
       />
       <AppStack.Screen

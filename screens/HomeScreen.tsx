@@ -12,7 +12,7 @@ import firestore from "@react-native-firebase/firestore";
 import { Divider, Layout, Spinner, Text } from "@ui-kitten/components";
 import React, { useContext, useEffect, useState } from "react";
 
-const CatechismArchive = () => {
+const HomeScreen = () => {
   const navigation = useNavigation();
   const [show, setShow] = useState(false);
   const [data, setData] = useState<any>([]);
@@ -90,7 +90,7 @@ const CatechismArchive = () => {
           activeOpacity={0.95}
           onPress={() => {
             //@ts-ignore
-            navigation.navigate("Em breve");
+            navigation.navigate("Confissões");
           }}
         >
           <ImageBackground
@@ -231,7 +231,7 @@ const CatechismArchive = () => {
   );
 };
 
-export default CatechismArchive;
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   list: {

@@ -14,14 +14,13 @@ import { AntDesign } from "@expo/vector-icons";
 import useColorScheme from "../../hooks/useColorScheme";
 import Ads from "../../components/Ads";
 
-const CatechismArchive = ({ route, navigation }: any) => {
+const ConfessionArchive = ({ route, navigation }: any) => {
   const [show, setShow] = useState(false);
   const [titulo, setTitulo] = useState("");
   const [fontSize, setFontSize] = useState(14);
   const [capitulos, setCapitulos] = useState<any>([]);
   const [documento, setDocumento] = useState(route.params);
   const [textoSelecionado, setTextoSelecionado] = useState("");
-  const [interstitialLoaded, setInterstitialLoaded] = useState(false);
 
   useEffect(() => {
     let keys = Object.keys(documento.texto);
@@ -228,7 +227,7 @@ const CatechismArchive = ({ route, navigation }: any) => {
   );
 };
 
-export default CatechismArchive;
+export default ConfessionArchive;
 
 const styles = StyleSheet.create({
   list: {

@@ -117,10 +117,7 @@ const Settings = () => {
         </>
 
         <Modal visible={visible} style={styles.backdrop}>
-          <Card
-            disabled={true}
-            style={{ width: "100%", height: "100%", backgroundColor: "white" }}
-          >
+          <Card disabled={true} style={{ width: "100%", height: "100%" }}>
             <Text style={{ textAlign: "justify", fontWeight: "bold" }}>
               DivineSpeakers - Termos e Condições de Uso
             </Text>
