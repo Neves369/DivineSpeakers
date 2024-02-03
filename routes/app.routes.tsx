@@ -7,6 +7,8 @@ import CatechismListScreen from "../screens/Catechism/CatechismListScreen";
 import PreacherListScreen from "../screens/Preacher/PreacherListScreen";
 import CreedArchiveScreen from "../screens/Creed/CreedArchiveScreen";
 import CreedListScreen from "../screens/Creed/CreedListScreen";
+import OtherArchive from "../screens/Other/OtherArchiveScreen";
+import OtherListScreen from "../screens/Other/OtherListScreen";
 import HomeScreen from "../screens/HomeScreen";
 import Settings from "../screens/ConfigScreen";
 import Contact from "../screens/Contact";
@@ -92,6 +94,17 @@ const AppRoutes: React.FC = () => {
         }}
       />
       <AppStack.Screen
+        name="Outros"
+        component={OtherListScreen}
+        options={{
+          headerStyle: {
+            backgroundColor:
+              useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
+          },
+          headerTintColor: useColorScheme() == "light" ? "black" : "white",
+        }}
+      />
+      <AppStack.Screen
         name="Configurações"
         component={Settings}
         options={{
@@ -165,6 +178,11 @@ const AppRoutes: React.FC = () => {
       <AppStack.Screen
         name="Credo"
         component={CreedArchiveScreen}
+        options={{ headerTransparent: true, headerTintColor: "white" }}
+      />
+      <AppStack.Screen
+        name="Outro"
+        component={OtherArchive}
         options={{ headerTransparent: true, headerTintColor: "white" }}
       />
     </AppStack.Navigator>
