@@ -14,7 +14,7 @@ import { AntDesign } from "@expo/vector-icons";
 import useColorScheme from "../../hooks/useColorScheme";
 import Ads from "../../components/Ads";
 
-const ConfessionArchive = ({ route, navigation }: any) => {
+const OtherArchive = ({ route, navigation }: any) => {
   const [show, setShow] = useState(false);
   const [titulo, setTitulo] = useState("");
   const [fontSize, setFontSize] = useState(14);
@@ -243,7 +243,7 @@ const ConfessionArchive = ({ route, navigation }: any) => {
   );
 };
 
-export default ConfessionArchive;
+export default OtherArchive;
 
 const styles = StyleSheet.create({
   list: {

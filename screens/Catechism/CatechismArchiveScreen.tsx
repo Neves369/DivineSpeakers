@@ -156,7 +156,17 @@ const CatechismArchive = ({ route, navigation }: any) => {
         <StatusBar
           backgroundColor={useColorScheme() == "light" ? "#FFFFFF" : "#1A2138"}
         />
-        <Card disabled={true} style={{ width: "100%", height: "100%" }}>
+        <Layout
+          style={{
+            padding: 15,
+            width: "100%",
+            height: "100%",
+            paddingBottom: 80,
+            position: "relative",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Text style={{ textAlign: "center", fontWeight: "bold" }}>
             {titulo}
           </Text>
@@ -175,6 +185,12 @@ const CatechismArchive = ({ route, navigation }: any) => {
           <View
             style={{
               height: 80,
+              bottom: 0,
+              width: "100%",
+              borderTopWidth: 1,
+              position: "absolute",
+              paddingHorizontal: 15,
+              borderTopColor: "gray",
               justifyContent: "space-between",
               alignItems: "center",
               flexDirection: "row",
@@ -221,7 +237,7 @@ const CatechismArchive = ({ route, navigation }: any) => {
               }}
             />
           </View>
-        </Card>
+        </Layout>
       </Modal>
       <Ads />
     </View>

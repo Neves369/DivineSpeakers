@@ -151,7 +151,7 @@ const HomeScreen = () => {
           activeOpacity={0.95}
           onPress={() => {
             //@ts-ignore
-            navigation.navigate("Em breve");
+            navigation.navigate("Outros");
           }}
         >
           <ImageBackground
