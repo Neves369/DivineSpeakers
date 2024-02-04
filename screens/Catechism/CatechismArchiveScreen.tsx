@@ -158,7 +158,7 @@ const CatechismArchive = ({ route, navigation }: any) => {
         />
         <Layout
           style={{
-            padding: 15,
+            padding: 20,
             width: "100%",
             height: "100%",
             paddingBottom: 80,
