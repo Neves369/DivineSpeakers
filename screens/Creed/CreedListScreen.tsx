@@ -135,13 +135,13 @@ const CreedList = () => {
         backgroundColor: useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
       }}
     >
+      {renderHeader()}
       <List
         style={styles.list}
         data={filter}
         renderItem={renderItem}
         ItemSeparatorComponent={Divider}
         ListFooterComponent={renderFooter}
-        ListHeaderComponent={renderHeader}
         onEndReachedThreshold={0.5}
         keyExtractor={(item) => `${item.titulo}`}
         onEndReached={() => {

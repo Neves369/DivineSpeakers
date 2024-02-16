@@ -1,6 +1,6 @@
 import Routes from "./routes";
 import * as eva from "@eva-design/eva";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { AuthProvider } from "./context/auth";
 import useColorScheme from "./hooks/useColorScheme";
@@ -10,8 +10,12 @@ import { ApplicationProvider } from "@ui-kitten/components";
 import { NavigationContainer } from "@react-navigation/native";
 import { ModalPermission } from "./components/permissions-modal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import checkVersion from "./utils/CheckStoreVersion";
+import UpdateModal from "./components/Update-modal";
 
 export default function App() {
+  const [update, setUpdate] = useState(false);
+
   const setupFirebase = async () => {
     await messaging().registerDeviceForRemoteMessages(); // Somente para iOS
     await messaging().setAutoInitEnabled(true); // Ativar a inicialização automática
@@ -52,6 +56,7 @@ export default function App() {
         <AuthProvider>
           <Routes />
           <ModalPermission />
+          <UpdateModal />
         </AuthProvider>
       </ApplicationProvider>
     </NavigationContainer>

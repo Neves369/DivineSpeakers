@@ -37,7 +37,6 @@ const PreacherList = () => {
         .limit(10)
         .get()
         .then((query: any) => {
-          console.log(query.docs.length);
           if (query.docs.length > 0) {
             let filter = query.docs.map((item: any) => item._data);
             setOffset(query.docs[query.docs.length - 1]);
@@ -158,12 +157,12 @@ const PreacherList = () => {
         backgroundColor: useColorScheme() == "light" ? "#FFFFFF" : "#1A2138",
       }}
     >
+      {renderHeader()}
       <List
         style={styles.list}
         data={filter}
         renderItem={renderItem}
         ListFooterComponent={renderFooter}
-        ListHeaderComponent={renderHeader}
         onEndReachedThreshold={0.5}
         keyExtractor={(item) => `${item.ref}`}
         onEndReached={() => {
