@@ -74,9 +74,10 @@ const HomeScreen = () => {
         >
           <ImageBackground
             style={styles.itemSection}
-            resizeMode="stretch"
+            resizeMode="cover"
+            resizeMethod="auto"
             imageStyle={{ borderRadius: 3 }}
-            source={require("../assets/pregador.webp")}
+            source={require("../assets/pregador.png")}
           />
           <View style={styles.itemSection}>
             <Text style={styles.itemTitle} category="h5">

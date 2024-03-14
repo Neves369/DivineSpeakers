@@ -18,15 +18,27 @@ const PdfModal: React.FC = () => {
   const [url, setUrl] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [numberOfPages, setNumberOfPages] = useState(0);
+  const [lastLocation, setLastLocation] = useState(1);
   const { pdfUrl, changePdfUrl }: any = useContext(AuthContext);
 
   useEffect(() => {
     if (pdfUrl !== "") {
+      setLastLocation(1);
       verifyFile(pdfUrl, "pdf");
-      console.log("entrou: ", url);
     }
+    loadStorageData(pdfUrl);
   }, [pdfUrl]);
 
+  async function loadStorageData(pdf: any) {
+    if (pdf) {
+      let storageLocation = await AsyncStorage.getItem(pdf.name);
+      if (storageLocation) {
+        setLastLocation(+storageLocation);
+      }
+    }
+  }
+
+  //salva no dispositivo para não fazer download toda hora
   const saveAndroidFile = async (fileUri: any, fileName: any, type: string) => {
     try {
       await AsyncStorage.setItem(
@@ -38,7 +50,7 @@ const PdfModal: React.FC = () => {
     }
   };
 
-  //faz o download do arquivo
+  //tenta recuperar da memória
   const verifyFile = async (item: any, type: string) => {
     let ref = await AsyncStorage.getItem(
       type == "pdf" ? "OfflinePDF" + item.name : "OfflineMP3" + item.name
@@ -62,6 +74,7 @@ const PdfModal: React.FC = () => {
     }
   };
 
+  //faz download do arquivo
   const downloadFile = async (item: any, type: string) => {
     const downloadResumable = FileSystem.createDownloadResumable(
       item.downloadURL,
@@ -92,6 +105,11 @@ const PdfModal: React.FC = () => {
     }
   };
 
+  const onChangePage = async (page: any) => {
+    setCurrentPage(page);
+    await AsyncStorage.setItem(pdfUrl.name, String(page));
+  };
+
   return (
     <Modal
       statusBarTranslucent={true}
@@ -99,19 +117,23 @@ const PdfModal: React.FC = () => {
     >
       <View style={styles.modalHeader}>
         <AntDesign
-          // style={{ position: "absolute", top: 40, right: 0, zIndex: 999 }}
           name="closecircle"
           size={30}
           color="white"
           onPress={() => {
             setUrl("");
             changePdfUrl("");
+            setLastLocation(currentPage);
           }}
         />
+        <Text numberOfLines={1} style={{ color: "white", marginBottom: 5 }}>
+          {pdfUrl.name?.split(".").shift()}
+        </Text>
       </View>
 
       {url ? (
         <Pdf
+          page={lastLocation}
           trustAllCerts={false}
           source={{
             uri: `data:application/pdf;base64,${url}`,
@@ -121,7 +143,7 @@ const PdfModal: React.FC = () => {
             setNumberOfPages(numberOfPages);
           }}
           onPageChanged={(page, numberOfPages) => {
-            setCurrentPage(page);
+            onChangePage(page);
           }}
           onError={(error) => {
             console.log(error);
@@ -156,11 +178,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalHeader: {
-    paddingBottom: 10,
+    gap: 15,
     height: 80,
     width: "100%",
     paddingLeft: 10,
-    justifyContent: "flex-end",
+    paddingBottom: 10,
+    flexDirection: "row",
+    alignItems: "flex-end",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
 });
