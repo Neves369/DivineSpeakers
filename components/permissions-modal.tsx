@@ -5,6 +5,7 @@ import useColorScheme from "../hooks/useColorScheme";
 import { StyleSheet, ScrollView, View, Modal } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button, Card, CheckBox, Text } from "@ui-kitten/components";
+
 export const ModalPermission = () => {
   const [checked, setChecked] = useState(false);
   const [visible, setVisible] = useState(false);

@@ -11,6 +11,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { ModalPermission } from "./components/permissions-modal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import UpdateModal from "./components/Update-modal";
+import PdfModal from "./components/pdf-modal";
 
 export default function App() {
   const setupFirebase = async () => {
@@ -56,6 +57,7 @@ export default function App() {
           <Routes />
           <ModalPermission />
           <UpdateModal />
+          <PdfModal />
         </AuthProvider>
       </ApplicationProvider>
     </NavigationContainer>

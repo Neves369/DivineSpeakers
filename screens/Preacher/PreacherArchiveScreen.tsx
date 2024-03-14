@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   View,
   StyleSheet,
@@ -7,6 +13,8 @@ import {
   AppState,
   Linking,
   ActivityIndicator,
+  Modal,
+  Dimensions,
 } from "react-native";
 import {
   Layout,
@@ -23,6 +31,7 @@ import useColorScheme from "../../hooks/useColorScheme";
 import DownloadFile from "../../components/downloadFile";
 import DividerVertical from "../../components/dividerVertical";
 import { ArchiveItem } from "../../components/preacherArchiveItem";
+import AuthContext from "../../context/auth";
 
 const PreacherArchive = ({ route, navigation }: any) => {
   const [screen, setScreen] = useState(0);
@@ -32,6 +41,7 @@ const PreacherArchive = ({ route, navigation }: any) => {
   const [archives, setArchives] = useState<any>([]);
   const [videoReady, setVideoReady] = useState(false);
   const [isReadyForRender, setIsReadyForRender] = useState(false);
+  const { changePdfUrl }: any = useContext(AuthContext);
 
   const appState = useRef(AppState.currentState);
 
@@ -181,8 +191,8 @@ const PreacherArchive = ({ route, navigation }: any) => {
           // interstitial.show();
           // setTimeout(() => {
           typeof item == "string"
-            ? Linking.openURL(autor.audios[item])
-            : DownloadFile(item, "pdf");
+            ? Linking.openURL(autor.audios[item] + "?autoplay=true")
+            : changePdfUrl(item);
           // }, 1000);
         }}
       />

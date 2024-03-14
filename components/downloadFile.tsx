@@ -12,50 +12,6 @@ const saveAndroidFile = async (fileUri: any, fileName: any, type: string) => {
       type == "pdf" ? "OfflinePDF" + fileName : "OfflineMP3" + fileName,
       fileUri as string
     );
-
-    // const fileString = await FileSystem.readAsStringAsync(fileUri, {
-    //   encoding: FileSystem.EncodingType.Base64,
-    // });
-    // try {
-    //   const directoryUri = await AsyncStorage.getItem("permissionDirectoryUrl");
-    //   if (!directoryUri) {
-    //     const permissions =
-    //       await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
-    //     if (!permissions.granted) {
-    //       return;
-    //     } else {
-    //       await AsyncStorage.setItem(
-    //         "permissionDirectoryUrl",
-    //         permissions.directoryUri
-    //       );
-    //       Permission = permissions.directoryUri;
-    //     }
-    //   } else {
-    //     Permission = directoryUri;
-    //   }
-
-    //   const directorycreated: any =
-    //     await FileSystem.StorageAccessFramework.makeDirectoryAsync(
-    //       Permission,
-    //       "Teste"
-    //     );
-
-    //   // await FileSystem.StorageAccessFramework.createFileAsync(
-    //   //   Permission,
-    //   //   fileName,
-    //   //   type == "pdf" ? "application/pdf+zip" : "audio/mp3"
-    //   // )
-    //   //   .then(async (uri: string) => {
-    //   //     await FileSystem.writeAsStringAsync(uri, fileString, {
-    //   //       encoding: FileSystem.EncodingType.Base64,
-    //   //     });
-    //   //   })
-    //   //   .catch((e: string) => {
-    //   //     ToastAndroid.show(`${e}`, ToastAndroid.SHORT);
-    //   //   });
-    // } catch (e) {
-    //   ToastAndroid.show(`${e}`, ToastAndroid.SHORT);
-    // }
   } catch (err) {
     ToastAndroid.show(`${err}`, ToastAndroid.SHORT);
   }
@@ -68,22 +24,28 @@ const verifyFile = async (item: any, type: string) => {
   );
 
   if (ref) {
-    await FileSystem.getInfoAsync(ref).then((response) => {
+    return await FileSystem.getInfoAsync(ref).then((response: any) => {
       const { exists, uri } = response;
       if (exists) {
         FileSystem.getContentUriAsync(uri).then((cUri) => {
-          IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
-            data: cUri,
-            flags: 1,
-            type: type == "pdf" ? "application/pdf+zip" : "audio/mp3",
-          });
+          console.log("aqui 1: ", cUri);
+
+          setTimeout(() => {
+            return cUri;
+          }, 1000);
+
+          //   IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
+          //     data: cUri,
+          //     flags: 1,
+          //     type: type == "pdf" ? "application/pdf+zip" : "audio/mp3",
+          //   });
         });
       } else {
-        downloadFile(item, type);
+        return downloadFile(item, type);
       }
     });
   } else {
-    downloadFile(item, type);
+    return downloadFile(item, type);
   }
 };
 
@@ -108,11 +70,13 @@ const downloadFile = async (item: any, type: string) => {
     await saveAndroidFile(downloadResult?.uri, item.name, type);
 
     await FileSystem.getContentUriAsync(downloadResult?.uri).then((cUri) => {
-      IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
-        data: cUri,
-        flags: 1,
-        type: type == "pdf" ? "application/pdf+zip" : "audio/mp3",
-      });
+      console.log("aqui: 2", cUri);
+      return cUri;
+      // IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
+      //   data: cUri,
+      //   flags: 1,
+      //   type: type == "pdf" ? "application/pdf+zip" : "audio/mp3",
+      // });
     });
   } catch (error) {
     ToastAndroid.show(`${error}`, ToastAndroid.SHORT);

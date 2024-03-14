@@ -74,7 +74,7 @@ const HomeScreen = () => {
         >
           <ImageBackground
             style={styles.itemSection}
-            resizeMode="center"
+            resizeMode="stretch"
             imageStyle={{ borderRadius: 3 }}
             source={require("../assets/pregador.webp")}
           />
