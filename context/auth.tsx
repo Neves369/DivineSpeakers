@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import firestore from "@react-native-firebase/firestore";
+import { ToastAndroid } from "react-native";
 
 interface AuthContextData {
   changeVerifyUpdates(up: boolean): void;
@@ -14,6 +15,7 @@ const AuthContext = createContext<AuthContextData | undefined>(undefined);
 export const AuthProvider = ({ children }: any) => {
   const [pdfUrl, setPdfUrl] = useState("");
   const [theme, setTheme] = useState<any>();
+
   const [verifyUpdates, setverifyUpdates] = useState(true);
 
   function changeVerifyUpdates(up: boolean) {
@@ -21,6 +23,7 @@ export const AuthProvider = ({ children }: any) => {
   }
 
   function changePdfUrl(url: string) {
+    ToastAndroid.show("Abrindo Arquivo...", ToastAndroid.SHORT);
     setPdfUrl(url);
   }
 

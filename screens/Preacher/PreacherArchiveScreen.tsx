@@ -28,11 +28,9 @@ import { Image } from "expo-image";
 import storage from "@react-native-firebase/storage";
 import YoutubePlayer from "react-native-youtube-iframe";
 import useColorScheme from "../../hooks/useColorScheme";
-import DownloadFile from "../../components/downloadFile";
 import DividerVertical from "../../components/dividerVertical";
 import { ArchiveItem } from "../../components/preacherArchiveItem";
 import AuthContext from "../../context/auth";
-import spotify from "../../hooks/spotify";
 
 const PreacherArchive = ({ route, navigation }: any) => {
   const [screen, setScreen] = useState(0);

@@ -1,6 +1,6 @@
 import Pdf from "react-native-pdf";
 import AuthContext from "../context/auth";
-import { Button, Text } from "@ui-kitten/components";
+import { Button, Spinner, Text } from "@ui-kitten/components";
 import * as FileSystem from "expo-file-system";
 import { AntDesign } from "@expo/vector-icons";
 import * as IntentLauncher from "expo-intent-launcher";
